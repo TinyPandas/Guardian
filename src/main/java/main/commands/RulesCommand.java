@@ -42,6 +42,7 @@ public class RulesCommand extends Command {
 	@Override
 	protected void execute(CommandEvent event) {
 		boolean flag = false;
+		event.getMessage().delete().queue();
 		
 		if (event.getArgs().length() > 0) {
 			String index = event.getArgs();

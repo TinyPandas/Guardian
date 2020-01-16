@@ -2,6 +2,9 @@ package main.handlers;
 
 import com.jagrosh.jdautilities.command.CommandClientBuilder;
 
+import main.commands.InfoCommand;
+import main.commands.InviteCommand;
+import main.commands.NoCodeCommand;
 import main.commands.OfftopicCommand;
 import main.commands.RulesCommand;
 import main.lib.Constants;
@@ -15,6 +18,9 @@ public class CommandHandler extends CommandClientBuilder {
 		setCoOwnerIds(Constants.megaID);
 		setEmojis("✅", "⚠", "❌");
 		addCommands(new OfftopicCommand(),
-					new RulesCommand());
+					new RulesCommand(),
+					new InviteCommand(),
+					new InfoCommand(),
+					new NoCodeCommand());
 	}
 }

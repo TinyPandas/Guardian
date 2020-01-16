@@ -16,6 +16,7 @@ public class OfftopicCommand extends Command {
 	
 	@Override
 	protected void execute(CommandEvent event) {
+		event.getMessage().delete().queue();
 		event.reply("This is not the place to enjoy off-topic conversation. We advise that you carry your conversation over to " 
 					+ event.getGuild().getTextChannelById(Constants.commonsID)
 					+ " or "
