@@ -1,0 +1,18 @@
+package main.commands;
+
+import com.jagrosh.jdautilities.command.Command;
+import com.jagrosh.jdautilities.command.CommandEvent;
+
+public class InviteCommand extends Command {
+	public InviteCommand() {
+		name = "invite";
+		help = "gets invite code";
+		guildOnly = true;
+		category = new Category("utility");
+	}
+	
+	@Override
+	protected void execute(CommandEvent event) {
+		event.reply("Invite your friends using: https://discord.gg/WHTAYrK");
+	}
+}
