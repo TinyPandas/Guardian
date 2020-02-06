@@ -1,7 +1,5 @@
 package main.commands.admin;
 
-import java.util.concurrent.atomic.AtomicReference;
-
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.mongodb.BasicDBObject;
@@ -58,12 +56,14 @@ public class MuteCommand extends Command {
 				Message m = c.retrieveMessageById(messageID).complete();
 				if (m != null) {
 					reason = m.getContentRaw();
+					//TODO log message before delete
+					m.delete().queue();
 				}
 			}
 		}
 		
 		DBObject log = ModerationLogDB.generateLog(user.getId(), "mute", event.getMember().getId(), reason);
-		DBCollection logs = DBManager.addDocument(ModerationLogDB.DBName, user.getId(), log);
+		DBCollection logs = DBManager.getInstance().addDocument(ModerationLogDB.DBName, user.getId(), log);
 		
 		EmbedBuilder result = new EmbedBuilder();
 		result.setTitle(String.format("<%s> has been muted.", user.getEffectiveName()));

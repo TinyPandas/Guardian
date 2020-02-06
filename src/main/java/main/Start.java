@@ -9,7 +9,6 @@ import javax.security.auth.login.LoginException;
 
 import org.apache.commons.lang3.StringUtils;
 
-import main.database.DBManager;
 import main.handlers.CommandHandler;
 import net.dv8tion.jda.api.AccountType;
 import net.dv8tion.jda.api.JDA;
@@ -21,8 +20,6 @@ public class Start {
 	
 	public Start(String token) {
 		if (System.getProperty("file.encoding").equalsIgnoreCase("UTF-8")) {
-			new DBManager(); //Simply start the DBManager.
-			
 			setupBot(token);
 		} else {
 			try {
