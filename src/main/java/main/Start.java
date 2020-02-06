@@ -9,6 +9,7 @@ import javax.security.auth.login.LoginException;
 
 import org.apache.commons.lang3.StringUtils;
 
+import main.database.DBManager;
 import main.handlers.CommandHandler;
 import net.dv8tion.jda.api.AccountType;
 import net.dv8tion.jda.api.JDA;
@@ -20,6 +21,8 @@ public class Start {
 	
 	public Start(String token) {
 		if (System.getProperty("file.encoding").equalsIgnoreCase("UTF-8")) {
+			new DBManager(); //Simply start the DBManager.
+			
 			setupBot(token);
 		} else {
 			try {
@@ -34,7 +37,7 @@ public class Start {
 	private void setupBot(String token) {
 		try {
 			JDABuilder jdaBuilder = new JDABuilder(AccountType.BOT).setToken(token);
-			jdaBuilder.setActivity(Activity.playing("Beta_0.1"));
+			jdaBuilder.setActivity(Activity.playing("Beta_0.2"));
 			
 			jdaBuilder.addEventListeners(new CommandHandler().build()); //Instantiate a new CommandHandler, then build and add to JDA instance.
 			

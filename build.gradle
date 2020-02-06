@@ -19,6 +19,9 @@ dependencies {
    compile 'net.dv8tion:JDA:4.1.0_98'
    compile 'com.jagrosh:jda-utilities:3.0.2'
    compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.0'
+   compile 'org.json:json'
+   compile 'com.google.code.gson:gson:2.8.1'
+   compile 'org.mongodb:mongo-java-driver:2.12.3'
 }
 
 compileJava.options.encoding = 'UTF-8'

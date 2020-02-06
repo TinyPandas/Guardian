@@ -7,6 +7,7 @@ import main.commands.InviteCommand;
 import main.commands.NoCodeCommand;
 import main.commands.OfftopicCommand;
 import main.commands.RulesCommand;
+import main.commands.admin.MuteCommand;
 import main.lib.Constants;
 
 public class CommandHandler extends CommandClientBuilder {
@@ -21,6 +22,7 @@ public class CommandHandler extends CommandClientBuilder {
 					new RulesCommand(),
 					new InviteCommand(),
 					new InfoCommand(),
-					new NoCodeCommand());
+					new NoCodeCommand(),
+					new MuteCommand());
 	}
 }
