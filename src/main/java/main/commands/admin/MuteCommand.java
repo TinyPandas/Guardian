@@ -1,8 +1,10 @@
 package main.commands.admin;
 
+import java.util.List;
+
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
-import com.mongodb.BasicDBObject;
+import com.jagrosh.jdautilities.commons.utils.FinderUtil;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 
@@ -24,25 +26,30 @@ public class MuteCommand extends Command {
 	protected void execute(CommandEvent event) {
 		String[] args = event.getArgs().split("\\s+");
 		event.getMessage().delete().queue();
-		String userID, messageID = null;
+		String userQuery, messageID = null;
 		Member user = null;
 		String reason = "No reason provided";
 		
 		if (args.length == 1) {
-			userID = args[0];
+			userQuery = args[0];
 		} else if(args.length == 2) {
-			userID = args[0];
+			userQuery = args[0];
 			messageID = args[1];
 		} else {
 			event.reply("You have not provided a userID.");
 			return;
 		}
 		
-		if (userID != null) {
-			try {
-				user = event.getGuild().getMemberById(userID);
-			} catch (NumberFormatException nfe) {
-				//Catch anything other than numbers.
+		if (userQuery != null) {
+			List<Member> potMembers = FinderUtil.findMembers(userQuery, event.getGuild());
+			if (potMembers.size() > 1) {
+				event.reply("Multiple members found. Please be more specific.");
+				return;
+			} else if(potMembers.size() == 1) {
+				user = potMembers.get(0);
+			} else {
+				event.reply("No users found.");
+				return;
 			}
 			
 			if (user == null) {
@@ -55,7 +62,7 @@ public class MuteCommand extends Command {
 			for (TextChannel c : event.getGuild().getTextChannels()) {
 				Message m = c.retrieveMessageById(messageID).complete();
 				if (m != null) {
-					reason = m.getContentRaw();
+					reason = m.getContentRaw().replaceAll("`", "");
 					//TODO log message before delete
 					m.delete().queue();
 				}
@@ -64,11 +71,12 @@ public class MuteCommand extends Command {
 		
 		DBObject log = ModerationLogDB.generateLog(user.getId(), "mute", event.getMember().getId(), reason);
 		DBCollection logs = DBManager.getInstance().addDocument(ModerationLogDB.DBName, user.getId(), log);
+		int length = (int)log.get("length");
 		
 		EmbedBuilder result = new EmbedBuilder();
 		result.setTitle(String.format("<%s> has been muted.", user.getEffectiveName()));
-		result.setDescription("Reason:\n" + reason.replaceAll("`", ""));
-		result.addField("Length", Long.toString((long)logs.find(new BasicDBObject("_id", logs.count())).one().get("length")), true);
+		result.setDescription("Reason:\n" + reason);
+		result.addField("Length", Integer.toString(length), true);
 		result.addField("Times muted", Long.toString(logs.count()), true);
 		result.addField("Discord ID", user.getId(), true);
 		result.addField("Name", user.getEffectiveName(), true);
