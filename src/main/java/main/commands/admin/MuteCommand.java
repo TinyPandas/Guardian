@@ -1,19 +1,20 @@
 package main.commands.admin;
 
+import java.util.Arrays;
 import java.util.List;
+
+import org.apache.commons.lang3.StringUtils;
 
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jdautilities.commons.utils.FinderUtil;
-import com.mongodb.DBCollection;
-import com.mongodb.DBObject;
 
-import main.database.DBManager;
-import main.database.ModerationLogDB;
-import net.dv8tion.jda.api.EmbedBuilder;
+import main.actions.ModAction;
+import main.actions.MuteAction;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 
 public class MuteCommand extends Command {
 	public MuteCommand() {
@@ -26,33 +27,33 @@ public class MuteCommand extends Command {
 	protected void execute(CommandEvent event) {
 		String[] args = event.getArgs().split("\\s+");
 		event.getMessage().delete().queue();
-		String userQuery, messageID = null;
-		Member user = null;
+		String targetUserQuery, messageID = null;
+		Member targetUser = null;
 		String reason = "No reason provided";
 		
 		if (args.length == 1) {
-			userQuery = args[0];
-		} else if(args.length == 2) {
-			userQuery = args[0];
-			messageID = args[1];
+			targetUserQuery = args[0];
+		} else if(args.length >= 2) {
+			targetUserQuery = args[0];
+			messageID = StringUtils.join(Arrays.copyOfRange(args, 1, args.length), " ");
 		} else {
 			event.reply("You have not provided a userID.");
 			return;
 		}
 		
-		if (userQuery != null) {
-			List<Member> potMembers = FinderUtil.findMembers(userQuery, event.getGuild());
+		if (targetUserQuery != null) {
+			List<Member> potMembers = FinderUtil.findMembers(targetUserQuery, event.getGuild());
 			if (potMembers.size() > 1) {
 				event.reply("Multiple members found. Please be more specific.");
 				return;
 			} else if(potMembers.size() == 1) {
-				user = potMembers.get(0);
+				targetUser = potMembers.get(0);
 			} else {
 				event.reply("No users found.");
 				return;
 			}
 			
-			if (user == null) {
+			if (targetUser == null) {
 				event.reply("You have provided an invalid userID");
 				return;
 			}
@@ -60,29 +61,25 @@ public class MuteCommand extends Command {
 		
 		if (messageID != null) {
 			for (TextChannel c : event.getGuild().getTextChannels()) {
-				Message m = c.retrieveMessageById(messageID).complete();
-				if (m != null) {
-					reason = m.getContentRaw().replaceAll("`", "");
-					//TODO log message before delete
-					m.delete().queue();
+				try {
+					Message m = c.retrieveMessageById(messageID).complete();
+					if (m != null) {
+						reason = m.getContentRaw().replaceAll("`", "");
+						//TODO log message before delete
+						m.delete().queue();
+					}
+				} catch (IllegalArgumentException iae) {
+					reason = messageID;
+				} catch (ErrorResponseException ere) {
+					//Provided a valid snowflakeID, however no message was found.
+					//Nothing to handle.
 				}
 			}
 		}
 		
-		DBObject log = ModerationLogDB.generateLog(user.getId(), "mute", event.getMember().getId(), reason);
-		DBCollection logs = DBManager.getInstance().addDocument(ModerationLogDB.DBName, user.getId(), log);
-		int length = (int)log.get("length");
+		ModAction action = new MuteAction(targetUser.getId(), targetUser.getEffectiveName(), event.getMember().getId(), event.getMember().getEffectiveName(), reason);
+		action.execute();
 		
-		EmbedBuilder result = new EmbedBuilder();
-		result.setTitle(String.format("<%s> has been muted.", user.getEffectiveName()));
-		result.setDescription("Reason:\n" + reason);
-		result.addField("Length", Integer.toString(length), true);
-		result.addField("Times muted", Long.toString(logs.count()), true);
-		result.addField("Discord ID", user.getId(), true);
-		result.addField("Name", user.getEffectiveName(), true);
-		result.addField("Moderator ID", event.getMember().getId(), true);
-		result.addField("Moderator", event.getMember().getEffectiveName(), true);
-		
-		event.reply(result.build());
+		event.reply(action.getEmbedResult());
 	}
 }
