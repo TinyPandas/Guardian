@@ -26,6 +26,7 @@ public class MuteCommand extends Command {
 	@Override
 	protected void execute(CommandEvent event) {
 		String[] args = event.getArgs().split("\\s+");
+		//TODO Log deletion in Constants.chat_log
 		event.getMessage().delete().queue();
 		String targetUserQuery, messageID = null;
 		Member targetUser = null;
@@ -78,8 +79,6 @@ public class MuteCommand extends Command {
 		}
 		
 		ModAction action = new MuteAction(targetUser.getId(), targetUser.getEffectiveName(), event.getMember().getId(), event.getMember().getEffectiveName(), reason);
-		action.execute();
-		
-		event.reply(action.getEmbedResult());
+		action.execute(event.getGuild());
 	}
 }

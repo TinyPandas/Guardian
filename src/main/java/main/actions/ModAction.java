@@ -1,6 +1,6 @@
 package main.actions;
 
-import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.entities.Guild;
 
 public abstract class ModAction implements Action {
 	// Define shared fields
@@ -37,9 +37,7 @@ public abstract class ModAction implements Action {
 	public String getReason() {
 		return reason;
 	}
-	
-	public abstract MessageEmbed getEmbedResult();
 
 	// Define shared functions
-	public abstract boolean execute();
+	public abstract boolean execute(Guild guild);
 }
