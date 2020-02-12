@@ -7,7 +7,7 @@ import com.mongodb.DBObject;
 
 public class ModerationLogDB {
 	public static final String DBName = "ModerationLogs";
-	private static final long monthInMilli = 1000 * 60 * 60 * 24 * 30;
+	private static final long monthInMilli = 1000L * 60L * 60L * 24L * 30L;
 
 	private static int getTimeForWarn(int level) {
 		System.out.println(level);
@@ -29,7 +29,7 @@ public class ModerationLogDB {
 			DBObject index = cursor.one();
 			if (index != null) {
 				long occurance = (long) index.get("date");				
-				if (start - occurance < Math.abs(monthInMilli) * 2) { //Check if log occurred in past 2 months.
+				if (start - occurance < monthInMilli * 2L) { //Check if log occurred in past 2 months.
 					ret += 1;
 				}
 			}
