@@ -9,8 +9,10 @@ import javax.security.auth.login.LoginException;
 
 import org.apache.commons.lang3.StringUtils;
 
+import main.events.MessageEvent;
 import main.events.ReactionEvent;
 import main.handlers.CommandHandler;
+import main.handlers.MuteHandler;
 import net.dv8tion.jda.api.AccountType;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -37,7 +39,12 @@ public class Start {
 			JDABuilder jdaBuilder = new JDABuilder(AccountType.BOT).setToken(token);
 			jdaBuilder.setActivity(Activity.playing("Beta_0.2"));
 			
-			jdaBuilder.addEventListeners(new CommandHandler().build(), new ReactionEvent()); //Instantiate a new CommandHandler, then build and add to JDA instance.
+			MuteHandler handler = new MuteHandler();
+			handler.start();
+			
+			jdaBuilder.addEventListeners(new CommandHandler().build(),
+										 new ReactionEvent(),
+										 new MessageEvent());
 			
 			api = jdaBuilder.build(); //Finalize setup of the JDA instance
 			api.awaitReady(); //Wait for Discord connection to setup.
