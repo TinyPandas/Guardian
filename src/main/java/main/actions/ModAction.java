@@ -1,6 +1,7 @@
 package main.actions;
 
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.TextChannel;
 
 public abstract class ModAction implements Action {
 	// Define shared fields
@@ -39,5 +40,5 @@ public abstract class ModAction implements Action {
 	}
 
 	// Define shared functions
-	public abstract boolean execute(Guild guild);
+	public abstract boolean execute(Guild guild, TextChannel channelOfExecution);
 }

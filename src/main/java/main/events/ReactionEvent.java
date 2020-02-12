@@ -20,7 +20,7 @@ public class ReactionEvent extends ListenerAdapter {
 				Member admin = event.getMember();
 				
 				ModAction action = new MuteAction(author.getId(), author.getEffectiveName(), admin.getId(), admin.getEffectiveName(), m.getContentRaw());
-				action.execute(event.getGuild());
+				action.execute(event.getGuild(), event.getChannel());
 				
 				//TODO Log deletion in Constants.chat_log
 				m.delete().queue();

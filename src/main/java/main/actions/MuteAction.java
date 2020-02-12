@@ -16,8 +16,8 @@ public class MuteAction extends ModAction {
 	}
 
 	@Override
-	public boolean execute(Guild guild) {
-		DBObject log = ModerationLogDB.generateLog(getTargetUserID(), "mute", getAdminID(), getReason());
+	public boolean execute(Guild guild, TextChannel channelOfExecution) {
+		DBObject log = ModerationLogDB.generateLog(getTargetUserID(), "Muted", getAdminID(), getReason());
 		DBCollection logs = DBManager.getInstance().addDocument(ModerationLogDB.DBName, getTargetUserID(), log);
 		int length = (int)log.get("length");
 		
