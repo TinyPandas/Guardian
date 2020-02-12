@@ -9,6 +9,7 @@ import main.commands.OfftopicCommand;
 import main.commands.RulesCommand;
 import main.commands.admin.HistoryCommand;
 import main.commands.admin.MuteCommand;
+import main.commands.admin.UnmuteCommand;
 import main.commands.admin.WarnCommand;
 import main.lib.Constants;
 
@@ -27,6 +28,7 @@ public class CommandHandler extends CommandClientBuilder {
 					new NoCodeCommand(),
 					new MuteCommand(),
 					new HistoryCommand(),
-					new WarnCommand());
+					new WarnCommand(),
+					new UnmuteCommand());
 	}
 }

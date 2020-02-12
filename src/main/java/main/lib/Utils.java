@@ -19,11 +19,13 @@ import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 public class Utils {
 	public static CommandArguments getArgs(CommandEvent event) {
 		String[] args = event.getArgs().split("\\s+");
-		event.getMessage().delete().queue();
 		Member admin = event.getMember();
 		String targetUserQuery = null, messageID = null;
 		Member targetUser = null;
 		String reason = "No reason provided";
+		
+		if (event.getMessage() != null) 
+			event.getMessage().delete().queue();
 		
 		if (args.length == 1) {
 			targetUserQuery = args[0];
@@ -72,7 +74,6 @@ public class Utils {
 	
 	public static String getDate(long milli) {
 		Date date = new Date(milli);
-		DateFormat df = new SimpleDateFormat("dd:MM:yy:HH:mm:ss");
 		
 		return date.toGMTString();
 	}

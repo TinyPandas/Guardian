@@ -16,11 +16,13 @@ public class MuteHandler extends Thread {
 		return isMuted.containsKey(userID);
 	}
 	
-	public static void unmute(String userID) {
+	public static boolean unmute(String userID) {
 		if (isMuted(userID)) {
 			isMuted.remove(userID);
+			return true;
 			//TODO Inform player they have been unmuted.
 		}
+		return false;
 	}
 	
 	public void run() {
