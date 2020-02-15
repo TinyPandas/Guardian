@@ -38,6 +38,10 @@ public abstract class ModAction implements Action {
 	public String getReason() {
 		return reason;
 	}
+	
+	public void setReason(String string) {
+		this.reason = string;
+	}
 
 	// Define shared functions
 	public abstract boolean execute(Guild guild, TextChannel channelOfExecution);

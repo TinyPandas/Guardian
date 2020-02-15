@@ -2,6 +2,7 @@ package main.events;
 
 import main.actions.ModAction;
 import main.actions.MuteAction;
+import main.actions.WarnAction;
 import main.lib.Constants;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
@@ -15,15 +16,24 @@ public class ReactionEvent extends ListenerAdapter {
 		super.onGuildMessageReactionAdd(event);
 		String reactionName = event.getReactionEmote().getName();
 		event.getChannel().retrieveMessageById(event.getMessageId()).queue(m -> {
+			Member author = m.getMember();
+			Member admin = event.getMember();
+			
+			ModAction action = null;
+			
+			//TODO Log deletion in Constants.chat_log
+			m.delete().queue();
+			
+			
 			if (reactionName.equalsIgnoreCase(Constants.mute)) {
-				Member author = m.getMember();
-				Member admin = event.getMember();
-				
-				ModAction action = new MuteAction(author.getId(), author.getEffectiveName(), admin.getId(), admin.getEffectiveName(), m.getContentRaw());
+				action = new MuteAction(author.getId(), author.getEffectiveName(), admin.getId(), admin.getEffectiveName(), m.getContentRaw());
 				action.execute(event.getGuild(), event.getChannel());
-				
-				//TODO Log deletion in Constants.chat_log
-				m.delete().queue();
+			} else if(reactionName.equalsIgnoreCase(Constants.warn)) {
+				action = new WarnAction(author.getId(), author.getEffectiveName(), admin.getId(), admin.getEffectiveName(), m.getContentRaw());
+				action.execute(event.getGuild(), event.getChannel());
+			} else if(reactionName.equalsIgnoreCase(Constants.mute_context)) {
+				action = new MuteAction(author.getId(), author.getEffectiveName(), admin.getId(), admin.getEffectiveName(), m.getContentRaw());
+				((MuteAction)action).deleteContext(event.getChannel(), m.getId());
 			}
 		});
 	}
