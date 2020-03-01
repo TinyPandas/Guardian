@@ -1,11 +1,14 @@
 package main.actions;
 
 import java.awt.Color;
+import java.util.List;
 
 import main.handlers.MuteHandler;
 import main.lib.Constants;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.TextChannel;
 
 public class UnmuteAction extends ModAction {
@@ -16,6 +19,18 @@ public class UnmuteAction extends ModAction {
 	@Override
 	public boolean execute(Guild guild, TextChannel channelOfExecution) {
 		boolean isMuted = MuteHandler.isMuted(getTargetUserID());
+		boolean flagged = false;
+		
+		if (!isMuted) {
+			Member member = guild.getMemberById(getTargetUserID());
+			List<Role> roles = member.getRoles();
+			for (Role r:roles) {
+				if (r.getName().equalsIgnoreCase("muted")) {
+					isMuted = true;
+					flagged = true;
+				}
+			}
+		}
 		
 		if (isMuted) {
 			EmbedBuilder result = new EmbedBuilder();
@@ -32,10 +47,10 @@ public class UnmuteAction extends ModAction {
 				muteLog = guild.getTextChannelsByName("mute-log", true).get(0);
 			}
 			
-			guild.removeRoleFromMember(getTargetUserID(), guild.getRolesByName("muted", true).get(0)).queue();
+			//guild.removeRoleFromMember(getTargetUserID(), guild.getRolesByName("muted", true).get(0)).queue();
 			
 			muteLog.sendMessage(result.build()).queue();
-			MuteHandler.unmute(getTargetUserID(), true);
+			MuteHandler.unmute(getTargetUserID(), true, flagged);
 		} else {
 			channelOfExecution.sendMessage("That user is not muted.").queue();
 		}

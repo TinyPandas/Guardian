@@ -1,6 +1,8 @@
 package main.lib;
 
 public class Constants {
+	public static final String guildID = "165202235226062848";
+	
 	/** UserIDs **/
 	public static final String pandaID = "169208961533345792";
 	public static final String megaID  = "114479781797429256";
@@ -25,5 +27,6 @@ public class Constants {
 	/** DB Constants **/
 	public static final String DutyList = "DutyList";
 	public static final String ModLogs = "ModerationLogs";
+	
 	
 }

@@ -79,7 +79,7 @@ public class MuteAction extends ModAction {
 		result.addField("Moderator", getAdminName(), true);
 		result.setColor(Color.RED);
 		
-		MuteHandler.mute(getTargetUserID(), System.currentTimeMillis() + (length*60*1000));
+		MuteHandler.mute(guild.getId(), getTargetUserID(), System.currentTimeMillis() + (length*60*1000));
 		
 		TextChannel muteLog = guild.getTextChannelById(Constants.mute_log);
 		if (muteLog == null) { 

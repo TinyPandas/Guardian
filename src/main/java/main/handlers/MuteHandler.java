@@ -5,15 +5,18 @@ import java.util.HashMap;
 
 import main.Start;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Guild;
 
 public class MuteHandler extends Thread {
 	//HashMap<userID, expirationOfMuteInMilli>
 	private static HashMap<String, Long> isMuted = new HashMap<>();
+	private static HashMap<String, String> userGuild = new HashMap<>();
 	
-	public static void mute(String userID, long endTime) {
+	public static void mute(String guildID, String userID, long endTime) {
 		if (!isMuted(userID)) {
 			System.out.println(String.format("Start: %s, End: %s", System.currentTimeMillis(), endTime));
 			isMuted.put(userID, endTime);
+			userGuild.put(userID, guildID);
 		}
 	}
 	
@@ -21,9 +24,12 @@ public class MuteHandler extends Thread {
 		return isMuted.containsKey(userID);
 	}
 	
-	public static boolean unmute(String userID, boolean early) {
-		if (isMuted(userID)) {
+	public static boolean unmute(String userID, boolean early, boolean hasRole) {
+		if (isMuted(userID) || hasRole) {
 			isMuted.remove(userID);
+			
+			Guild guild = Start.getAPI().getGuildById(userGuild.get(userID));
+			guild.removeRoleFromMember(userID, guild.getRolesByName("muted", true).get(0)).queue();
 			
 			Start.getAPI().getUserById(userID).openPrivateChannel().queue(pc -> {
 				if (early) {
@@ -55,7 +61,7 @@ public class MuteHandler extends Thread {
 					long endTime = isMuted.get(muted);
 					
 					if (current >= endTime) {
-						unmute(muted, false);
+						unmute(muted, false, false);
 					}
 				}
 			}
