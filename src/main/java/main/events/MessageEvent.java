@@ -1,6 +1,5 @@
 package main.events;
 
-import main.handlers.MuteHandler;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageDeleteEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageEmbedEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
@@ -11,12 +10,6 @@ public class MessageEvent extends ListenerAdapter {
 	@Override
 	public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
 		super.onGuildMessageReceived(event);
-		
-		String targetID = event.getAuthor().getId();
-		
-		if (MuteHandler.isMuted(targetID)) {
-			event.getMessage().delete().queue();
-		}
 	}
 
 	@Override

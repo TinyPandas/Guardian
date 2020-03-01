@@ -5,7 +5,7 @@ import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 
 import main.database.DBManager;
-import main.database.ModerationLogDB;
+import main.lib.Constants;
 import main.lib.Utils;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.TextChannel;
@@ -17,7 +17,7 @@ public class HistoryAction extends ModAction {
 
 	@Override
 	public boolean execute(Guild guild, TextChannel channelOfExecution) {
-		DBCollection logs = DBManager.getInstance().getCollection(ModerationLogDB.DBName, getTargetUserID());
+		DBCollection logs = DBManager.getInstance().getCollection(Constants.ModLogs, getTargetUserID());
 		
 		String currentMessage = "";
 		

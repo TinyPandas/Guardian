@@ -20,7 +20,7 @@ public class WarnAction extends ModAction {
 	@Override
 	public boolean execute(Guild guild, TextChannel channelOfExecution) {
 		DBObject log = ModerationLogDB.generateLog(getTargetUserID(), "Warned", getAdminID(), getReason());
-		DBCollection logs = DBManager.getInstance().addDocument(ModerationLogDB.DBName, getTargetUserID(), log);
+		DBCollection logs = DBManager.getInstance().addDocument(Constants.ModLogs, getTargetUserID(), log);
 		int length = (int)log.get("length");
 		
 		EmbedBuilder result = new EmbedBuilder();

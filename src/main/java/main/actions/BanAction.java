@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.util.List;
 
 import com.jagrosh.jdautilities.commons.utils.FinderUtil;
-import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 
 import main.Start;
@@ -25,7 +24,7 @@ public class BanAction extends ModAction {
 	@Override
 	public boolean execute(Guild guild, TextChannel channelOfExecution) {
 		DBObject log = ModerationLogDB.generateLog(getTargetUserID(), "Banned", getAdminID(), getReason());
-		DBCollection logs = DBManager.getInstance().addDocument(ModerationLogDB.DBName, getTargetUserID(), log);
+		DBManager.getInstance().addDocument(Constants.ModLogs, getTargetUserID(), log);
 		
 		Member m = guild.getMemberById(getTargetUserID());
 		if (m != null) {

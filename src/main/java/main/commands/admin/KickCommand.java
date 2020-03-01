@@ -7,19 +7,23 @@ import main.actions.KickAction;
 import main.actions.ModAction;
 import main.lib.CommandArguments;
 import main.lib.Utils;
+import net.dv8tion.jda.api.entities.Member;
 
 public class KickCommand extends Command {
 	public KickCommand() {
 		name = "kick";
 		help = "kick <userQuery> <reason>";
-		requiredRole = "staff";
 	}
 	
 	@Override
 	protected void execute(CommandEvent event) {
-		CommandArguments args = Utils.getArgs(event, true, true);
+		Member user = event.getMember();
 		
-		ModAction action = new KickAction(args.getTargetUserID(), args.getTargetUser().getEffectiveName(), args.getAdminID(), args.getAdmin().getEffectiveName(), args.getReason());
-		action.execute(event.getGuild(), event.getTextChannel());
+		if (Utils.hasRoleWithName(user, "staff")) {
+			CommandArguments args = Utils.getArgs(event, true, true);
+			
+			ModAction action = new KickAction(args.getTargetUserID(), args.getTargetUser().getEffectiveName(), args.getAdminID(), args.getAdmin().getEffectiveName(), args.getReason());
+			action.execute(event.getGuild(), event.getTextChannel());
+		}
 	}
 }

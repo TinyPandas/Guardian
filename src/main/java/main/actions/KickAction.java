@@ -2,7 +2,6 @@ package main.actions;
 
 import java.awt.Color;
 
-import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 
 import main.database.DBManager;
@@ -20,7 +19,7 @@ public class KickAction extends ModAction {
 	@Override
 	public boolean execute(Guild guild, TextChannel channelOfExecution) {
 		DBObject log = ModerationLogDB.generateLog(getTargetUserID(), "Kicked", getAdminID(), getReason());
-		DBCollection logs = DBManager.getInstance().addDocument(ModerationLogDB.DBName, getTargetUserID(), log);
+		DBManager.getInstance().addDocument(Constants.ModLogs, getTargetUserID(), log);
 		
 		guild.getMemberById(getTargetUserID()).kick().queue();
 		

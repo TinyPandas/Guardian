@@ -2,9 +2,12 @@ package main.database;
 
 import java.net.UnknownHostException;
 
+import org.bson.types.ObjectId;
+
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoException;
@@ -53,8 +56,25 @@ public class DBManager {
 	}
 	
 	public void deleteDocument(String dbName, String collection, String index) {
-		DBCollection col = getCollection(dbName, collection);
 		DBObject query = new BasicDBObject("_id", Integer.parseInt(index));
-		col.remove(query);
+		deleteDocument(dbName, collection, query);
+	}
+	
+	public void deleteDocument(String dbName, String collection, DBObject item) {
+		DBCollection col = getCollection(dbName, collection);
+		col.remove(item);
+	}
+	
+	public ObjectId hasDocument(String dbName, String collection, DBObject query) {
+		DBCollection col = getCollection(dbName, collection);
+		DBCursor cursor = col.find(query);
+		
+		if (cursor.size() > 0) {
+			DBObject item = cursor.next();
+			
+			return (ObjectId)item.get("_id");
+		}
+				
+		return null;
 	}
 }

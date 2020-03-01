@@ -5,8 +5,9 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 
+import main.lib.Constants;
+
 public class ModerationLogDB {
-	public static final String DBName = "ModerationLogs";
 	private static final long monthInMilli = 1000L * 60L * 60L * 24L * 30L;
 
 	/**
@@ -48,7 +49,7 @@ public class ModerationLogDB {
 	}
 
 	public static DBObject generateLog(String userID, String modAction, String adminID, String reason) {
-		DBCollection logs = DBManager.getInstance().getCollection(DBName, userID);
+		DBCollection logs = DBManager.getInstance().getCollection(Constants.ModLogs, userID);
 		long warns = logs.count() + 1; // Get how many warns/mutes a user has. + 1 for this infraction.
 
 		long start = System.currentTimeMillis();

@@ -7,20 +7,24 @@ import main.actions.ModAction;
 import main.actions.RemoveMuteAction;
 import main.lib.CommandArguments;
 import main.lib.Utils;
+import net.dv8tion.jda.api.entities.Member;
 
 public class RemoveMuteCommand extends Command {
 	public RemoveMuteCommand() {
 		name = "removemute";
 		help = "removemute <userQuery> <muteIndex>";
-		requiredRole = "staff";
 	}
 	
 	@Override
 	protected void execute(CommandEvent event) {
-		CommandArguments args = Utils.getArgs(event, true, true);
-		String index = event.getMessage().getContentStripped().split("\\s+")[2];
+		Member user = event.getMember();
 		
-		ModAction action = new RemoveMuteAction(args.getTargetUserID(), args.getTargetUser().getEffectiveName(), args.getAdminID(), args.getAdmin().getEffectiveName(), args.getReason(), index);
-		action.execute(event.getGuild(), event.getTextChannel());
+		if (Utils.hasRoleWithName(user, "staff")) {
+			CommandArguments args = Utils.getArgs(event, true, true);
+			String index = event.getMessage().getContentStripped().split("\\s+")[2];
+			
+			ModAction action = new RemoveMuteAction(args.getTargetUserID(), args.getTargetUser().getEffectiveName(), args.getAdminID(), args.getAdmin().getEffectiveName(), args.getReason(), index);
+			action.execute(event.getGuild(), event.getTextChannel());
+		}
 	}
 }

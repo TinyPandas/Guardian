@@ -11,6 +11,7 @@ import com.jagrosh.jdautilities.commons.utils.FinderUtil;
 
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 
@@ -67,6 +68,16 @@ public class Utils {
 		}
 		
 		return new CommandArguments(targetUserQuery, targetUser, admin, reason);
+	}
+	
+	public static boolean hasRoleWithName(Member member, String roleName) {
+		List<Role> roles = member.getRoles();
+		for (Role r:roles) {
+			if (r.getName().equalsIgnoreCase(roleName)) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	public static String getDate(long milli) {

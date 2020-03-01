@@ -1,7 +1,7 @@
 package main.actions;
 
 import main.database.DBManager;
-import main.database.ModerationLogDB;
+import main.lib.Constants;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.TextChannel;
 
@@ -16,7 +16,7 @@ public class RemoveMuteAction extends ModAction {
 	@Override
 	public boolean execute(Guild guild, TextChannel channelOfExecution) {
 		System.out.println("Removing index: " + index);
-		DBManager.getInstance().deleteDocument(ModerationLogDB.DBName, getTargetUserID(), index);
+		DBManager.getInstance().deleteDocument(Constants.ModLogs, getTargetUserID(), index);
 		
 		return false;
 	}

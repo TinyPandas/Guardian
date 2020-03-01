@@ -22,4 +22,8 @@ public class Constants {
 	public static final String mute_context = "modMuteContext";
 	public static final String warn = "modWarning";
 	
+	/** DB Constants **/
+	public static final String DutyList = "DutyList";
+	public static final String ModLogs = "ModerationLogs";
+	
 }

@@ -12,6 +12,8 @@ import main.commands.admin.BanCommand;
 import main.commands.admin.HistoryCommand;
 import main.commands.admin.KickCommand;
 import main.commands.admin.MuteCommand;
+import main.commands.admin.OffDutyCommand;
+import main.commands.admin.OnDutyCommand;
 import main.commands.admin.RemoveMuteCommand;
 import main.commands.admin.UnmuteCommand;
 import main.commands.admin.WarnCommand;
@@ -19,7 +21,7 @@ import main.lib.Constants;
 
 public class CommandHandler extends CommandClientBuilder {
 	public CommandHandler() {
-		setPrefix("-");
+		setPrefix(";");
 		useHelpBuilder(true);
 		setShutdownAutomatically(false);
 		setOwnerId(Constants.pandaID);
@@ -37,6 +39,8 @@ public class CommandHandler extends CommandClientBuilder {
 					new KickCommand(),
 					new RemoveMuteCommand(),
 					new BanCommand(),
-					new RequestCommand());
+					new RequestCommand(),
+					new OnDutyCommand(),
+					new OffDutyCommand());
 	}
 }
