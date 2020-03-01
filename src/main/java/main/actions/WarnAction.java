@@ -21,12 +21,10 @@ public class WarnAction extends ModAction {
 	public boolean execute(Guild guild, TextChannel channelOfExecution) {
 		DBObject log = ModerationLogDB.generateLog(getTargetUserID(), "Warned", getAdminID(), getReason());
 		DBCollection logs = DBManager.getInstance().addDocument(Constants.ModLogs, getTargetUserID(), log);
-		int length = (int)log.get("length");
 		
 		EmbedBuilder result = new EmbedBuilder();
 		result.setTitle(String.format("<%s> has been warned.", getTargetUserName()));
 		result.setDescription("Reason:\n" + getReason());
-		result.addField("Length", Integer.toString(length), true);
 		result.addField("Times muted", Long.toString(logs.count()), true);
 		result.addField("Discord ID", getTargetUserID(), true);
 		result.addField("Name", getTargetUserName(), true);

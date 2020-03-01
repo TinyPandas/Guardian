@@ -17,7 +17,7 @@ public class ModerationLogDB {
 	 */
 	private static int getTimeForWarn(int level) {
 		System.out.println(level);
-        if (level <= 1)
+        if (level < 1)
             return 0;
 
         int muteTime = (int) (Math.pow(2.0, level - 3) * 60.0);
@@ -35,9 +35,11 @@ public class ModerationLogDB {
 			DBCursor cursor = logs.find(query);
 			DBObject index = cursor.one();
 			if (index != null) {
-				long occurance = (long) index.get("date");				
+				long occurance = (long) index.get("date");		
 				if (start - occurance < monthInMilli * 2L) { //Check if log occurred in past 2 months.
-					ret += 1;
+					if (((String)index.get("action")).equalsIgnoreCase("muted")) {
+						ret += 1;
+					}
 				}
 			}
 		}
