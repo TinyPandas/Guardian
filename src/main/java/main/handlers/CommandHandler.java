@@ -6,9 +6,13 @@ import main.commands.InfoCommand;
 import main.commands.InviteCommand;
 import main.commands.NoCodeCommand;
 import main.commands.OfftopicCommand;
+import main.commands.RequestCommand;
 import main.commands.RulesCommand;
+import main.commands.admin.BanCommand;
 import main.commands.admin.HistoryCommand;
+import main.commands.admin.KickCommand;
 import main.commands.admin.MuteCommand;
+import main.commands.admin.RemoveMuteCommand;
 import main.commands.admin.UnmuteCommand;
 import main.commands.admin.WarnCommand;
 import main.lib.Constants;
@@ -29,6 +33,10 @@ public class CommandHandler extends CommandClientBuilder {
 					new MuteCommand(),
 					new HistoryCommand(),
 					new WarnCommand(),
-					new UnmuteCommand());
+					new UnmuteCommand(),
+					new KickCommand(),
+					new RemoveMuteCommand(),
+					new BanCommand(),
+					new RequestCommand());
 	}
 }

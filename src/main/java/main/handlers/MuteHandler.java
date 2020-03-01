@@ -1,6 +1,10 @@
 package main.handlers;
 
+import java.awt.Color;
 import java.util.HashMap;
+
+import main.Start;
+import net.dv8tion.jda.api.EmbedBuilder;
 
 public class MuteHandler extends Thread {
 	//HashMap<userID, expirationOfMuteInMilli>
@@ -8,6 +12,7 @@ public class MuteHandler extends Thread {
 	
 	public static void mute(String userID, long endTime) {
 		if (!isMuted(userID)) {
+			System.out.println(String.format("Start: %s, End: %s", System.currentTimeMillis(), endTime));
 			isMuted.put(userID, endTime);
 		}
 	}
@@ -16,11 +21,23 @@ public class MuteHandler extends Thread {
 		return isMuted.containsKey(userID);
 	}
 	
-	public static boolean unmute(String userID) {
+	public static boolean unmute(String userID, boolean early) {
 		if (isMuted(userID)) {
 			isMuted.remove(userID);
+			
+			Start.getAPI().getUserById(userID).openPrivateChannel().queue(pc -> {
+				if (early) {
+					EmbedBuilder unmuteEarly = new EmbedBuilder();
+					unmuteEarly.setTitle("You've been unmuted early by a moderator.");
+					unmuteEarly.setDescription("Welcome back.");
+					unmuteEarly.setColor(Color.GREEN);
+					pc.sendMessage(unmuteEarly.build()).queue();
+				} else {
+					pc.sendMessage("You have been unmuted.").queue();
+				}
+			});
+			
 			return true;
-			//TODO Inform player they have been unmuted.
 		}
 		return false;
 	}
@@ -38,7 +55,7 @@ public class MuteHandler extends Thread {
 					long endTime = isMuted.get(muted);
 					
 					if (current >= endTime) {
-						unmute(muted);
+						unmute(muted, false);
 					}
 				}
 			}

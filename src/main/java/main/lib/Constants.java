@@ -15,6 +15,7 @@ public class Constants {
 	public static final String kick_ban_log = "405214796561252363";
 	public static final String mute_log = "405214780656320512";
 	public static final String join_log = "405214726650331139";
+	public static final String commands = "410429900827262976";
 	
 	/** Emote names **/
 	public static final String mute = "modMute";

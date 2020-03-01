@@ -17,9 +17,9 @@ public class HistoryCommand extends Command {
 	
 	@Override
 	protected void execute(CommandEvent event) {
-		CommandArguments args = Utils.getArgs(event);
+		CommandArguments args = Utils.getArgs(event, false, true);
 		
-		ModAction action = new HistoryAction(args.getTargetUserID(), args.getTargetUser().getEffectiveName(), args.getAdminID(), args.getAdmin().getEffectiveName(), args.getReason());
+		ModAction action = new HistoryAction((args.getTargetUserID().equalsIgnoreCase("-1")) ? args.getQuery() : args.getTargetUserID(), (args.getTargetUser() != null) ? args.getTargetUser().getEffectiveName() : args.getQuery(), args.getAdminID(), args.getAdmin().getEffectiveName(), args.getReason());
 		action.execute(event.getGuild(), event.getTextChannel());
 	}
 }

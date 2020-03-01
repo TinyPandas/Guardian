@@ -1,6 +1,6 @@
 package main.actions;
 
-import java.util.Date;
+import java.awt.Color;
 import java.util.List;
 
 import com.mongodb.DBCollection;
@@ -35,8 +35,19 @@ public class MuteAction extends ModAction {
 					break;
 				}
 				
+				
+				TextChannel chatLog = channelOfExecution.getGuild().getTextChannelById(Constants.chat_log);
+				if (chatLog == null) {
+					chatLog = channelOfExecution.getGuild().getTextChannelsByName("chat-log", true).get(0);
+				}
 				if (m.getAuthor().getId().equalsIgnoreCase(getTargetUserID()) && dif <= 300) {
-					//TODO Log to chat log
+					EmbedBuilder builder = new EmbedBuilder();
+					builder.setTitle("**Message Deleted**");
+					builder.addField("User", m.getMember().getEffectiveName(), true);
+					builder.addField("Channel", m.getTextChannel().getAsMention(), true);
+					builder.addField("Content", m.getContentRaw(), false);
+					
+					chatLog.sendMessage(builder.build()).queue();
 					contextString = m.getContentRaw().replaceAll("'", "") + "\n" + contextString;
 					m.delete().queue();
 				}
@@ -46,8 +57,6 @@ public class MuteAction extends ModAction {
 				contextString += getReason();
 				setReason(contextString);
 			}
-			
-			System.out.println("--REASON--\n" + getReason() + "--==--");
 			
 			execute(channelOfExecution.getGuild(), channelOfExecution);
 		});
@@ -68,20 +77,25 @@ public class MuteAction extends ModAction {
 		result.addField("Name", getTargetUserName(), true);
 		result.addField("Moderator ID", getAdminID(), true);
 		result.addField("Moderator", getAdminName(), true);
+		result.setColor(Color.RED);
 		
-		//TODO Implement Mute thread.
-		//TODO Actually mute member.
-		if (length > 0) {
-			MuteHandler.mute(getTargetUserID(), System.currentTimeMillis() + length*60*1000);
-			guild.getTextChannelsByName("mute-log", true).get(0).sendMessage(String.format("%s has been muted until %s", getTargetUserName(), new Date(System.currentTimeMillis() + length*60*1000))).queue();
-		}
+		MuteHandler.mute(getTargetUserID(), System.currentTimeMillis() + (length*60*1000));
 		
 		TextChannel muteLog = guild.getTextChannelById(Constants.mute_log);
 		if (muteLog == null) { 
 			muteLog = guild.getTextChannelsByName("mute-log", true).get(0);
 		}
-	
+
+		guild.addRoleToMember(getTargetUserID(), guild.getRolesByName("muted", true).get(0)).queue();
+		
 		muteLog.sendMessage(result.build()).queue();
+		guild.getMemberById(getTargetUserID()).getUser().openPrivateChannel().queue(pc -> {
+			result.clearFields();
+			result.setTitle(String.format("You have been muted in %s.", guild.getName()));
+			result.addField("Length", Utils.getLength(length), true);
+			result.addField("Times muted", Long.toString(logs.count()), true);
+			pc.sendMessage(result.build()).queue();
+		});
 		
 		return true;
 	}

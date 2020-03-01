@@ -1,7 +1,5 @@
 package main.lib;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -17,15 +15,17 @@ import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 
 public class Utils {
-	public static CommandArguments getArgs(CommandEvent event) {
+	public static CommandArguments getArgs(CommandEvent event, boolean required, boolean delete) {
 		String[] args = event.getArgs().split("\\s+");
 		Member admin = event.getMember();
 		String targetUserQuery = null, messageID = null;
 		Member targetUser = null;
 		String reason = "No reason provided";
 		
-		if (event.getMessage() != null) 
-			event.getMessage().delete().queue();
+		if (delete) {
+			if (event.getMessage() != null) 
+				event.getMessage().delete().queue();
+		}
 		
 		if (args.length == 1) {
 			targetUserQuery = args[0];
@@ -43,11 +43,8 @@ public class Utils {
 			} else if(potMembers.size() == 1) {
 				targetUser = potMembers.get(0);
 			} else {
-				event.reply("No users found.");
-			}
-			
-			if (targetUser == null) {
-				event.reply("You have provided an invalid userID");
+				if (required)
+					event.reply("No users found with the query provided.");
 			}
 		}
 		
@@ -69,7 +66,7 @@ public class Utils {
 			}
 		}
 		
-		return new CommandArguments(targetUser, admin, reason);
+		return new CommandArguments(targetUserQuery, targetUser, admin, reason);
 	}
 	
 	public static String getDate(long milli) {

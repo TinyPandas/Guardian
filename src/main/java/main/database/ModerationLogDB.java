@@ -9,6 +9,11 @@ public class ModerationLogDB {
 	public static final String DBName = "ModerationLogs";
 	private static final long monthInMilli = 1000L * 60L * 60L * 24L * 30L;
 
+	/**
+	 * 
+	 * @param level
+	 * @return muteTime in minutes
+	 */
 	private static int getTimeForWarn(int level) {
 		System.out.println(level);
         if (level <= 1)
@@ -16,12 +21,13 @@ public class ModerationLogDB {
 
         int muteTime = (int) (Math.pow(2.0, level - 3) * 60.0);
 
+        System.out.println(muteTime);
         // limit mute time to 72h
-        return Math.min(muteTime, 72 * 60 * 60);
+        return Math.min(muteTime, 72 * 60);
     }
 
 	public static int getWarnsInMonthSpan(DBCollection logs, long start) {
-		int ret = 0;
+		int ret = 1; //Starting at 1 guarantees a 30 minute mute.
 
 		for (int i = (int) logs.count(); i > 0; i--) {
 			DBObject query = new BasicDBObject("_id", i);

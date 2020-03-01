@@ -17,7 +17,7 @@ public class WarnCommand extends Command {
 	
 	@Override
 	protected void execute(CommandEvent event) {
-		CommandArguments args = Utils.getArgs(event);
+		CommandArguments args = Utils.getArgs(event, true, true);
 		
 		ModAction action = new WarnAction(args.getTargetUserID(), args.getTargetUser().getEffectiveName(), args.getAdminID(), args.getAdmin().getEffectiveName(), args.getReason());
 		action.execute(event.getGuild(), event.getTextChannel());

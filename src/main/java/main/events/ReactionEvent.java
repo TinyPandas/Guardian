@@ -5,6 +5,7 @@ import main.actions.MuteAction;
 import main.actions.WarnAction;
 import main.lib.Constants;
 import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionRemoveAllEvent;
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionRemoveEvent;
@@ -18,6 +19,16 @@ public class ReactionEvent extends ListenerAdapter {
 		event.getChannel().retrieveMessageById(event.getMessageId()).queue(m -> {
 			Member author = m.getMember();
 			Member admin = event.getMember();
+			
+			boolean isStaff = false;
+			for (Role r:admin.getRoles()) {
+				if (r.getName().equalsIgnoreCase("staff")) {
+					isStaff = true;
+				}
+			}
+			
+			
+			if (isStaff) return;
 			
 			ModAction action = null;
 			

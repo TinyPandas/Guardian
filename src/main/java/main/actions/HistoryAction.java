@@ -25,7 +25,7 @@ public class HistoryAction extends ModAction {
 		DBObject currentLog = cursor.next();
 		
 		//TODO Cleanup
-		while (cursor.hasNext()) {
+		while (currentLog != null) {
 			String action = currentLog.get("action").toString();
 			String adminID = currentLog.get("adminID").toString();
 			String adminName = "**unknown**";
@@ -59,7 +59,11 @@ public class HistoryAction extends ModAction {
 				currentMessage += line1 + line2 + line4;
 			}
 			
-			currentLog = cursor.next();
+			if (cursor.hasNext()) {
+				currentLog = cursor.next();
+			} else {
+				currentLog = null;
+			}
 		}
 		
 		if (currentMessage.length() > 0) {

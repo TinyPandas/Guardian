@@ -19,7 +19,7 @@ import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
 
 public class Start {
-	private JDA api;
+	protected static JDA api;
 	
 	public Start(String token) {
 		if (System.getProperty("file.encoding").equalsIgnoreCase("UTF-8")) {
@@ -88,6 +88,10 @@ public class Start {
                 e.printStackTrace();
             }
 		}
+	}
+	
+	public static JDA getAPI() {
+		return api;
 	}
 	
 	public static void main(String[] args) {

@@ -1,5 +1,7 @@
 package main.actions;
 
+import java.awt.Color;
+
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 
@@ -30,9 +32,22 @@ public class WarnAction extends ModAction {
 		result.addField("Name", getTargetUserName(), true);
 		result.addField("Moderator ID", getAdminID(), true);
 		result.addField("Moderator", getAdminName(), true);
+		result.setColor(Color.ORANGE);
 		
 		TextChannel muteLog = guild.getTextChannelById(Constants.mute_log);
+		if (muteLog == null) {
+			muteLog = guild.getTextChannelsByName("mute-log", true).get(0);
+		}
 		muteLog.sendMessage(result.build()).queue();
+		
+		guild.getMemberById(getTargetUserID()).getUser().openPrivateChannel().queue(pc -> {
+			EmbedBuilder warnMsg = new EmbedBuilder();
+			warnMsg.setTitle(String.format("You have been warned in %s.", guild.getName()));
+			warnMsg.setDescription(getReason());
+			warnMsg.setColor(Color.ORANGE);
+			warnMsg.setFooter("This has been logged to your record.");
+			pc.sendMessage(warnMsg.build()).queue();
+		});
 		
 		return true;
 	}
