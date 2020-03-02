@@ -1,5 +1,7 @@
 package main.events;
 
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageDeleteEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageEmbedEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
@@ -10,6 +12,13 @@ public class MessageEvent extends ListenerAdapter {
 	@Override
 	public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
 		super.onGuildMessageReceived(event);
+		Member member = event.getMember();
+		User admin = event.getJDA().getSelfUser();
+		Member admin2 = event.getGuild().getMember(admin);
+		
+		//TODO: Sending Messages too quickly
+		//TODO: Sending repeating messages
+		//TODO: Message with filtered words
 	}
 
 	@Override
