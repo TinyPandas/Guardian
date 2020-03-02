@@ -25,8 +25,11 @@ public class Constants {
 	public static final String warn = "modWarning";
 	
 	/** DB Constants **/
+	public static final String MainDB = "Shared";
 	public static final String DutyList = "DutyList";
 	public static final String ModLogs = "ModerationLogs";
-	
-	
+	public static final String FilterList = "FilterList";
+	public static final String ChatLogs = "ChatLogs";
+	public static final String ChatEditLogs = "EditedLogs";
+	public static final String ChatDelLogs = "DeletedLogs";
 }

@@ -26,10 +26,10 @@ public class OnDutyCommand extends Command {
 			DBManager manager = DBManager.getInstance();
 			DBObject query = new BasicDBObject("adminID", user.getId());
 			
-			ObjectId index = manager.hasDocument(Constants.DutyList, "dutylist", query);
+			ObjectId index = manager.hasDocument(Constants.MainDB, Constants.DutyList, query);
 			
 			if (index == null) {
-				manager.addDocument(Constants.DutyList, "dutylist", query);
+				manager.addDocument(Constants.MainDB, Constants.DutyList, query);
 				event.reply("You have been marked for duty.");
 			} else {
 				event.reply("You are already marked for duty.");

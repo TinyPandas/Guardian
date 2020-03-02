@@ -26,13 +26,13 @@ public class OffDutyCommand extends Command {
 			DBManager manager = DBManager.getInstance();
 			DBObject query = new BasicDBObject("adminID", user.getId());
 			
-			DBCollection col = manager.getCollection(Constants.DutyList, "dutylist");
+			DBCollection col = manager.getCollection(Constants.MainDB, Constants.DutyList);
 			DBCursor cursor = col.find(query);
 			
 			if (cursor.size() > 0) {
 				DBObject toDelete = cursor.next();
 				
-				manager.deleteDocument(Constants.DutyList, "dutylist", toDelete);
+				manager.deleteDocument(Constants.MainDB, Constants.DutyList, toDelete);
 				event.reply("You have been taken off the duty list.");
 			} else {
 				event.reply("You are not marked for duty.");

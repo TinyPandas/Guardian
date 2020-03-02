@@ -9,6 +9,7 @@ import main.commands.OfftopicCommand;
 import main.commands.RequestCommand;
 import main.commands.RulesCommand;
 import main.commands.admin.BanCommand;
+import main.commands.admin.FilterCommand;
 import main.commands.admin.HistoryCommand;
 import main.commands.admin.KickCommand;
 import main.commands.admin.MuteCommand;
@@ -41,6 +42,7 @@ public class CommandHandler extends CommandClientBuilder {
 					new BanCommand(),
 					new RequestCommand(),
 					new OnDutyCommand(),
-					new OffDutyCommand());
+					new OffDutyCommand(),
+					new FilterCommand());
 	}
 }
