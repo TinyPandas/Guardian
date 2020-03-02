@@ -9,8 +9,10 @@ import javax.security.auth.login.LoginException;
 
 import org.apache.commons.lang3.StringUtils;
 
+import main.events.MemberUpdateEvent;
 import main.events.MessageEvent;
 import main.events.ReactionEvent;
+import main.events.VoiceEvent;
 import main.handlers.CommandHandler;
 import main.handlers.MuteHandler;
 import net.dv8tion.jda.api.AccountType;
@@ -44,7 +46,9 @@ public class Start {
 			
 			jdaBuilder.addEventListeners(new CommandHandler().build(),
 										 new ReactionEvent(),
-										 new MessageEvent());
+										 new MessageEvent(),
+										 new MemberUpdateEvent(),
+										 new VoiceEvent());
 			
 			api = jdaBuilder.build(); //Finalize setup of the JDA instance
 			api.awaitReady(); //Wait for Discord connection to setup.
