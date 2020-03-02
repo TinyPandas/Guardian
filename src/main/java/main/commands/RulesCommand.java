@@ -6,6 +6,8 @@ import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 
 import main.lib.Constants;
+import main.lib.Utils;
+import net.dv8tion.jda.api.EmbedBuilder;
 
 public class RulesCommand extends Command {
 	private static HashMap<String, String> rulesByIndex = new HashMap<>();
@@ -44,16 +46,37 @@ public class RulesCommand extends Command {
 		boolean flag = false;
 		event.getMessage().delete().queue();
 		
+		if (!(Utils.hasRoleWithName(event.getMember(), "staff"))) {
+			return;
+		}
+		
 		if (event.getArgs().length() > 0) {
+			flag = true;
 			String index = event.getArgs();
 			if (rulesByIndex.containsKey(index)) {
-				flag = true;
 				event.reply(rulesByIndex.get(index));
+			} else {
+				event.getMember().getUser().openPrivateChannel().queue(pc -> {
+					EmbedBuilder builder = new EmbedBuilder();
+					builder.setTitle("Rule shortcuts");
+					
+					for (String key:rulesByIndex.keySet()) {
+						String desc = rulesByIndex.get(key);
+						
+						builder.addField(key, desc, false);
+					}
+					
+					pc.sendMessage(builder.build()).queue();
+				});
 			}
 		}
 		
 		if (!flag) {
 			event.reply("Please view the " + event.getGuild().getTextChannelById(Constants.rulesID) + " channel.");
 		}
+	}
+	
+	public static HashMap<String, String> getRulesIndex() {
+		return rulesByIndex;
 	}
 }

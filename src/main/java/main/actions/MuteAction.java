@@ -70,7 +70,7 @@ public class MuteAction extends ModAction {
 		
 		EmbedBuilder result = new EmbedBuilder();
 		result.setTitle(String.format("<%s> has been muted.", getTargetUserName()));
-		result.setDescription("Reason:\n" + getReason());
+		result.setDescription("Reason:\n" + log.get("reason"));
 		result.addField("Length", Utils.getLength(length), true);
 		result.addField("Times muted", Long.toString(logs.count()), true);
 		result.addField("Discord ID", getTargetUserID(), true);

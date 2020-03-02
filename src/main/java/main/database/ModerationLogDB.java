@@ -1,10 +1,13 @@
 package main.database;
 
+import java.util.HashMap;
+
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 
+import main.commands.RulesCommand;
 import main.lib.Constants;
 
 public class ModerationLogDB {
@@ -57,8 +60,20 @@ public class ModerationLogDB {
 		long start = System.currentTimeMillis();
 		int warnsPastMonthSpan = getWarnsInMonthSpan(logs, start);
 
+		String temp = "";
+		if (reason.startsWith("$")) {
+			temp = reason.substring(1);
+			HashMap<String, String> rules = RulesCommand.getRulesIndex();
+			if (rules.containsKey(temp)) {
+				temp = rules.get(temp);
+			}
+		}
+		
+		System.out.println("Original: " + reason);
+		System.out.println("Current: " + temp);
+		
 		DBObject log = new BasicDBObject("_id", warns).append("action", modAction).append("date", start)
-				.append("length", getTimeForWarn(warnsPastMonthSpan)).append("adminID", adminID).append("reason", reason);
+				.append("length", getTimeForWarn(warnsPastMonthSpan)).append("adminID", adminID).append("reason", temp);
 
 		return log;
 	}

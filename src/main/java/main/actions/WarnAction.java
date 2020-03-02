@@ -24,7 +24,7 @@ public class WarnAction extends ModAction {
 		
 		EmbedBuilder result = new EmbedBuilder();
 		result.setTitle(String.format("<%s> has been warned.", getTargetUserName()));
-		result.setDescription("Reason:\n" + getReason());
+		result.setDescription("Reason:\n" + log.get("reason"));
 		result.addField("Times muted", Long.toString(logs.count()), true);
 		result.addField("Discord ID", getTargetUserID(), true);
 		result.addField("Name", getTargetUserName(), true);
