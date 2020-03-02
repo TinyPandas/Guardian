@@ -30,6 +30,7 @@ public class MuteHandler extends Thread {
 			
 			Guild guild = Start.getAPI().getGuildById(userGuild.get(userID));
 			guild.removeRoleFromMember(userID, guild.getRolesByName("muted", true).get(0)).queue();
+			guild.mute(guild.getMemberById(userID), true).queue();
 			
 			Start.getAPI().getUserById(userID).openPrivateChannel().queue(pc -> {
 				if (early) {

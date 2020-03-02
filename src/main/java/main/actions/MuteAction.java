@@ -87,6 +87,7 @@ public class MuteAction extends ModAction {
 		}
 
 		guild.addRoleToMember(getTargetUserID(), guild.getRolesByName("muted", true).get(0)).queue();
+		guild.mute(guild.getMemberById(getTargetUserID()), true).queue();
 		
 		muteLog.sendMessage(result.build()).queue();
 		guild.getMemberById(getTargetUserID()).getUser().openPrivateChannel().queue(pc -> {
