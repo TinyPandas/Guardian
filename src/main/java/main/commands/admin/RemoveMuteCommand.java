@@ -21,6 +21,11 @@ public class RemoveMuteCommand extends Command {
 		
 		if (Utils.hasRoleWithName(user, "staff")) {
 			CommandArguments args = Utils.getArgs(event, true, true);
+			
+			if (args.getTargetUser().getUser().isBot()) {
+				return;
+			}
+			
 			String index = event.getMessage().getContentStripped().split("\\s+")[2];
 			
 			ModAction action = new RemoveMuteAction(args.getTargetUserID(), args.getTargetUser().getEffectiveName(), args.getAdminID(), args.getAdmin().getEffectiveName(), args.getReason(), index);

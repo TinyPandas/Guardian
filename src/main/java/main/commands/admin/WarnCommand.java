@@ -22,6 +22,10 @@ public class WarnCommand extends Command {
 		if (Utils.hasRoleWithName(user, "staff")) {
 			CommandArguments args = Utils.getArgs(event, true, true);
 			
+			if (args.getTargetUser().getUser().isBot()) {
+				return;
+			}
+			
 			ModAction action = new WarnAction(args.getTargetUserID(), args.getTargetUser().getEffectiveName(), args.getAdminID(), args.getAdmin().getEffectiveName(), args.getReason());
 			action.execute(event.getGuild(), event.getTextChannel());
 		}

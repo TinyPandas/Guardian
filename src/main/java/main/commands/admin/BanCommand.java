@@ -21,6 +21,10 @@ public class BanCommand extends Command {
 		
 		if (Utils.hasRoleWithName(user, "staff")) {
 			CommandArguments args = Utils.getArgs(event, false, true);
+			
+			if (args.getTargetUser().getUser().isBot()) {
+				return;
+			}
 		
 			ModAction action = new BanAction((args.getTargetUserID().equalsIgnoreCase("-1")) ? args.getQuery() : args.getTargetUserID(), (args.getTargetUser() != null) ? args.getTargetUser().getEffectiveName() : args.getQuery(), args.getAdminID(), args.getAdmin().getEffectiveName(), args.getReason());
 			action.execute(event.getGuild(), event.getTextChannel());
