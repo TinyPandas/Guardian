@@ -1,6 +1,8 @@
 package main;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -99,10 +101,32 @@ public class Start {
 	}
 	
 	public static void main(String[] args) {
-		if (args.length > 0) {
-			new Start(args[0]);
+		File f = new File("./token.txt");
+		if (f.exists()) {
+			String token = "";
+			try (BufferedReader r = new BufferedReader(new FileReader(f))) {
+				String line = r.readLine();
+				if (line.length() > 0) {
+					if (line.startsWith("token:")) {
+						token = line.split(":")[1];
+					}
+				}
+			} catch (Exception e) {}
+			
+			if (token.length() > 0) {
+				new Start(token);
+			} else {
+				System.out.println("No token provided.");
+				System.exit(0);
+			}
 		} else {
-			System.out.println("No token provided.");
+			System.out.println("No token.txt file found.");
+			System.out.println("Creating.. Please provide token.");
+			try {
+				f.createNewFile();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 			System.exit(0);
 		}
 	}
