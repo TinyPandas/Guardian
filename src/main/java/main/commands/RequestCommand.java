@@ -32,9 +32,12 @@ public class RequestCommand extends Command {
 		}
 		
 		DBManager manager = DBManager.getInstance();
-		DBCollection onDuty = manager.getCollection(Constants.DutyList, "dutylist");
+		DBCollection onDuty = manager.getCollection(Constants.MainDB, Constants.DutyList);
 		DBCursor list = onDuty.find();
-		DBObject currentMember = list.next();
+		DBObject currentMember = null;
+		if (list.hasNext()) {
+			currentMember = list.next();
+		}
 		
 		List<String> staffList = new ArrayList<>();
 		
