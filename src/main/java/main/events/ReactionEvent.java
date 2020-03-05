@@ -4,6 +4,7 @@ import main.actions.ModAction;
 import main.actions.MuteAction;
 import main.actions.WarnAction;
 import main.lib.Constants;
+import main.lib.Utils;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
@@ -37,13 +38,13 @@ public class ReactionEvent extends ListenerAdapter {
 			
 			
 			if (reactionName.equalsIgnoreCase(Constants.mute)) {
-				action = new MuteAction(author.getId(), author.getEffectiveName(), admin.getId(), admin.getEffectiveName(), m.getContentRaw());
+				action = new MuteAction(author.getId(), author.getEffectiveName(), admin.getId(), admin.getEffectiveName(), m.getContentRaw(), Utils.downloadAttachments(m), m.getId());
 				action.execute(event.getGuild(), event.getChannel());
 			} else if(reactionName.equalsIgnoreCase(Constants.warn)) {
-				action = new WarnAction(author.getId(), author.getEffectiveName(), admin.getId(), admin.getEffectiveName(), m.getContentRaw());
+				action = new WarnAction(author.getId(), author.getEffectiveName(), admin.getId(), admin.getEffectiveName(), m.getContentRaw(), Utils.downloadAttachments(m), m.getId());
 				action.execute(event.getGuild(), event.getChannel());
 			} else if(reactionName.equalsIgnoreCase(Constants.mute_context)) {
-				action = new MuteAction(author.getId(), author.getEffectiveName(), admin.getId(), admin.getEffectiveName(), m.getContentRaw());
+				action = new MuteAction(author.getId(), author.getEffectiveName(), admin.getId(), admin.getEffectiveName(), m.getContentRaw(), Utils.downloadAttachments(m), m.getId());
 				((MuteAction)action).deleteContext(event.getChannel(), m.getId());
 			}
 		});

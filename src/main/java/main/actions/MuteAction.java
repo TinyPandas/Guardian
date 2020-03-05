@@ -17,8 +17,8 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
 
 public class MuteAction extends ModAction {
-	public MuteAction(String targetUserID, String targetUserName, String adminID, String adminName, String reason) {
-		super(targetUserID, targetUserName, adminID, adminName, reason);
+	public MuteAction(String targetUserID, String targetUserName, String adminID, String adminName, String reason, List<String> images, String messageID) {
+		super(targetUserID, targetUserName, adminID, adminName, reason, images, messageID);
 	}
 	
 	private String contextString = "";
@@ -64,7 +64,7 @@ public class MuteAction extends ModAction {
 	
 	@Override
 	public boolean execute(Guild guild, TextChannel channelOfExecution) {	
-		DBObject log = ModerationLogDB.generateLog(getTargetUserID(), "Muted", getAdminID(), getReason());
+		DBObject log = ModerationLogDB.generateLog(getTargetUserID(), "Muted", getAdminID(), getReason(), getImages(), getMessageID());
 		DBCollection logs = DBManager.getInstance().addDocument(Constants.ModLogs, getTargetUserID(), log);
 		int length = (int)log.get("length");
 		

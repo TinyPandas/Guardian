@@ -21,13 +21,11 @@ public class ModerationLogDB {
 	 * @return muteTime in minutes
 	 */
 	private static int getTimeForWarn(int level) {
-		System.out.println(level);
         if (level < 1)
             return 0;
 
         int muteTime = (int) (Math.pow(2.0, level - 3) * 60.0);
 
-        System.out.println(muteTime);
         // limit mute time to 72h
         return Math.min(muteTime, 72 * 60);
     }
@@ -55,7 +53,7 @@ public class ModerationLogDB {
 		return ret;
 	}
 
-	public static DBObject generateLog(String userID, String modAction, String adminID, String reason) {
+	public static DBObject generateLog(String userID, String modAction, String adminID, String reason, List<String> images, String messageID) {
 		DBCollection logs = DBManager.getInstance().getCollection(Constants.ModLogs, userID);
 		long warns = logs.count() + 1; // Get how many warns/mutes a user has. + 1 for this infraction.
 
@@ -87,12 +85,17 @@ public class ModerationLogDB {
 			}
 		}
 		
-		System.out.println("Original: " + reason);
-		System.out.println("Current: " + temp);
-		
 		DBObject log = new BasicDBObject("_id", warns).append("action", modAction).append("date", start)
 				.append("length", getTimeForWarn(warnsPastMonthSpan)).append("adminID", adminID).append("reason", temp);
 
+		if (messageID != null) {
+			((BasicDBObject)log).append("messageID", messageID);
+		}
+		
+		if (images.size() > 0) {
+			((BasicDBObject)log).append("images", String.join(", ", images));
+		}
+		
 		return log;
 	}
 }

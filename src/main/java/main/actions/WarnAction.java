@@ -1,6 +1,7 @@
 package main.actions;
 
 import java.awt.Color;
+import java.util.List;
 
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
@@ -13,13 +14,13 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.TextChannel;
 
 public class WarnAction extends ModAction {
-	public WarnAction(String targetUserID, String targetUserName, String adminID, String adminName, String reason) {
-		super(targetUserID, targetUserName, adminID, adminName, reason);
+	public WarnAction(String targetUserID, String targetUserName, String adminID, String adminName, String reason, List<String> images, String messageID) {
+		super(targetUserID, targetUserName, adminID, adminName, reason, images, messageID);
 	}
 
 	@Override
 	public boolean execute(Guild guild, TextChannel channelOfExecution) {
-		DBObject log = ModerationLogDB.generateLog(getTargetUserID(), "Warned", getAdminID(), getReason());
+		DBObject log = ModerationLogDB.generateLog(getTargetUserID(), "Warned", getAdminID(), getReason(), getImages(), getMessageID());
 		DBCollection logs = DBManager.getInstance().addDocument(Constants.ModLogs, getTargetUserID(), log);
 		
 		EmbedBuilder result = new EmbedBuilder();

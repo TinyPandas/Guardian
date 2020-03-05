@@ -29,7 +29,7 @@ public class RemoveMuteCommand extends Command {
 			
 			String index = event.getMessage().getContentStripped().split("\\s+")[2];
 			
-			ModAction action = new RemoveMuteAction(args.getTargetUserID(), args.getTargetUser().getEffectiveName(), args.getAdminID(), args.getAdmin().getEffectiveName(), args.getReason(), index);
+			ModAction action = new RemoveMuteAction(args.getTargetUserID(), args.getTargetUser().getEffectiveName(), args.getAdminID(), args.getAdmin().getEffectiveName(), args.getReason(), index, args.getImages(), args.getMessageID());
 			action.execute(event.getGuild(), event.getTextChannel());
 		}
 	}

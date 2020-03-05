@@ -12,8 +12,8 @@ import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.TextChannel;
 
 public class UnmuteAction extends ModAction {
-	public UnmuteAction(String targetUserID, String targetUserName, String adminID, String adminName, String reason) {
-		super(targetUserID, targetUserName, adminID, adminName, reason);
+	public UnmuteAction(String targetUserID, String targetUserName, String adminID, String adminName, String reason, List<String> images, String messageID) {
+		super(targetUserID, targetUserName, adminID, adminName, reason, images, messageID);
 	}
 
 	@Override

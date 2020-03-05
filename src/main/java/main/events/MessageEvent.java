@@ -73,7 +73,7 @@ public class MessageEvent extends ListenerAdapter {
 			}
 			
 			if (hist.size() >= 5) {
-				ModAction mute = new MuteAction(member.getId(), member.getEffectiveName(), admin.getId(), admin2.getEffectiveName(), "You are sending messages too quickly.");
+				ModAction mute = new MuteAction(member.getId(), member.getEffectiveName(), admin.getId(), admin2.getEffectiveName(), "You are sending messages too quickly.", new ArrayList<>(), null);
 				mute.execute(event.getGuild(), event.getChannel());
 			}
 			

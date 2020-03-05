@@ -17,13 +17,13 @@ import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
 
 public class BanAction extends ModAction {
-	public BanAction(String targetUserID, String targetUserName, String adminID, String adminName, String reason) {
-		super(targetUserID, targetUserName, adminID, adminName, reason);
+	public BanAction(String targetUserID, String targetUserName, String adminID, String adminName, String reason, List<String> images, String messageID) {
+		super(targetUserID, targetUserName, adminID, adminName, reason, images, messageID);
 	}
 
 	@Override
 	public boolean execute(Guild guild, TextChannel channelOfExecution) {
-		DBObject log = ModerationLogDB.generateLog(getTargetUserID(), "Banned", getAdminID(), getReason());
+		DBObject log = ModerationLogDB.generateLog(getTargetUserID(), "Banned", getAdminID(), getReason(), getImages(), getMessageID());
 		DBManager.getInstance().addDocument(Constants.ModLogs, getTargetUserID(), log);
 		
 		Member m = guild.getMemberById(getTargetUserID());

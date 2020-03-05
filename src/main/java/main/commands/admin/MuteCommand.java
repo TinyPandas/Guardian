@@ -27,7 +27,7 @@ public class MuteCommand extends Command {
 				return;
 			}
 			
-			ModAction action = new MuteAction(args.getTargetUserID(), args.getTargetUser().getEffectiveName(), args.getAdminID(), args.getAdmin().getEffectiveName(), args.getReason());
+			ModAction action = new MuteAction(args.getTargetUserID(), args.getTargetUser().getEffectiveName(), args.getAdminID(), args.getAdmin().getEffectiveName(), args.getReason(), args.getImages(), args.getMessageID());
 			action.execute(event.getGuild(), event.getTextChannel());
 		}
 	}
