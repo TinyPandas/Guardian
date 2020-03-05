@@ -13,6 +13,7 @@ public class UnmuteCommand extends Command {
 	public UnmuteCommand() {
 		name = "unmute";
 		help = "unmute <userQuery>";
+		category = new Category("staff");
 	}
 	
 	@Override

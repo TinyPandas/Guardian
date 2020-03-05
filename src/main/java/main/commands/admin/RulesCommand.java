@@ -1,4 +1,4 @@
-package main.commands;
+package main.commands.admin;
 
 import java.util.HashMap;
 
@@ -16,8 +16,7 @@ public class RulesCommand extends Command {
 		name = "rules";
 		help = "displays rule of given name.";
 		guildOnly = true;
-		category = new Category("utility");
-		requiredRole = "staff";
+		category = new Category("staff");
 		
 		rulesByIndex.put("guidelines", "Global Guidelines are enforced. https://scriptinghelpers.org/help/community-guidelines");
 		rulesByIndex.put("nsfw", "Sexually explicit, strongly suggestive, and/or gory media is not allowed.");
@@ -43,12 +42,12 @@ public class RulesCommand extends Command {
 	
 	@Override
 	protected void execute(CommandEvent event) {
-		boolean flag = false;
-		event.getMessage().delete().queue();
-		
 		if (!(Utils.hasRoleWithName(event.getMember(), "staff"))) {
 			return;
 		}
+
+		boolean flag = false;
+		event.getMessage().delete().queue();
 		
 		if (event.getArgs().length() > 0) {
 			flag = true;

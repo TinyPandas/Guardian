@@ -13,6 +13,7 @@ public class KickCommand extends Command {
 	public KickCommand() {
 		name = "kick";
 		help = "kick <userQuery> <reason>";
+		category = new Category("staff");
 	}
 	
 	@Override

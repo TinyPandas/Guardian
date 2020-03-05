@@ -13,6 +13,7 @@ public class BanCommand extends Command {
 	public BanCommand() {
 		name = "ban";
 		help = "ban <userQuery> <reason>";
+		category = new Category("staff");
 	}
 	
 	@Override

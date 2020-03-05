@@ -13,6 +13,7 @@ public class HistoryCommand extends Command {
 	public HistoryCommand() {
 		name = "history";
 		help = "history <userQuery>";
+		category = new Category("staff");
 	}
 	
 	@Override

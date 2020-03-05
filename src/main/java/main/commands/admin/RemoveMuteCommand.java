@@ -13,6 +13,7 @@ public class RemoveMuteCommand extends Command {
 	public RemoveMuteCommand() {
 		name = "removemute";
 		help = "removemute <userQuery> <muteIndex>";
+		category = new Category("staff");
 	}
 	
 	@Override

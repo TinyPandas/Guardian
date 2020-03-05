@@ -1,13 +1,15 @@
 package main.database;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 
-import main.commands.RulesCommand;
+import main.commands.admin.RulesCommand;
 import main.lib.Constants;
 
 public class ModerationLogDB {
@@ -61,11 +63,27 @@ public class ModerationLogDB {
 		int warnsPastMonthSpan = getWarnsInMonthSpan(logs, start);
 
 		String temp = "";
-		if (reason.startsWith("$")) {
-			temp = reason.substring(1);
-			HashMap<String, String> rules = RulesCommand.getRulesIndex();
-			if (rules.containsKey(temp)) {
-				temp = rules.get(temp);
+		List<String> list = new ArrayList<>();
+		String[] parts = reason.split("\\s+");
+		for (String part:parts) {
+			String toAdd = part;
+			
+			if (part.startsWith("$")) {
+				toAdd = part.substring(1);
+				HashMap<String, String> rules = RulesCommand.getRulesIndex();
+				if (rules.containsKey(toAdd)) {
+					toAdd = rules.get(toAdd);
+				}
+			}
+			
+			list.add(toAdd);
+		}
+		
+		if (temp.length() == 0) {
+			if (list.size() > 0) {
+				temp = String.join(" ", list);
+			} else {
+				temp = reason;
 			}
 		}
 		

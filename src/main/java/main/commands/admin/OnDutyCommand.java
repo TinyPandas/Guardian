@@ -16,6 +16,7 @@ public class OnDutyCommand extends Command {
 	public OnDutyCommand() {
 		name = "onduty";
 		help = "marks you for mentionable via request command";
+		category = new Category("staff");	
 	}
 	
 	@Override

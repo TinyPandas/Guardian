@@ -16,6 +16,7 @@ public class OffDutyCommand extends Command {
 	public OffDutyCommand() {
 		name = "offduty";
 		help = "removes you from the mentionable list for the request command";
+		category = new Category("staff");
 	}
 	
 	@Override

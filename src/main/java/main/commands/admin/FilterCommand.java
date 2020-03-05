@@ -21,6 +21,7 @@ public class FilterCommand extends Command {
 	public FilterCommand() {
 		name = "filter";
 		help = "add | removes a word from the filter.";
+		category = new Category("staff");
 	}
 	
 	@Override

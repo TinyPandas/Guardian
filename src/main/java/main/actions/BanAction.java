@@ -44,7 +44,7 @@ public class BanAction extends ModAction {
 		
 		EmbedBuilder result = new EmbedBuilder();
 		result.setTitle(String.format("User banned: <%s>", temp != null ? temp.getName() : getTargetUserName()));
-		result.setDescription(getReason());
+		result.setDescription(log.get("reason").toString());
 		result.addField("Discord ID", getTargetUserID(), true);
 		result.addField("Name", getTargetUserName(), true);
 		result.addField("Moderator ID", getAdminID(), true);

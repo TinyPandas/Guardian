@@ -41,7 +41,7 @@ public class WarnAction extends ModAction {
 		guild.getMemberById(getTargetUserID()).getUser().openPrivateChannel().queue(pc -> {
 			EmbedBuilder warnMsg = new EmbedBuilder();
 			warnMsg.setTitle(String.format("You have been warned in %s.", guild.getName()));
-			warnMsg.setDescription(getReason());
+			warnMsg.setDescription(log.get("reason").toString());
 			warnMsg.setColor(Color.ORANGE);
 			warnMsg.setFooter("This has been logged to your record.");
 			pc.sendMessage(warnMsg.build()).queue();

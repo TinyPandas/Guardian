@@ -8,13 +8,12 @@ public class NoCodeCommand extends Command {
 		name = "nocode";
 		help = "prompt user to provide code.";
 		guildOnly = true;
-		requiredRole = "staff";
 		category = new Category("utility");
 	}
 	
 	@Override
 	protected void execute(CommandEvent event) {
 		event.getMessage().delete().queue();
-		event.reply("To get assistance, we recommend you provide the code you are working with.");
+		event.reply("To get assistance, we recommend you provide the code you are working with inside of a codeblock. \n\n \\`\\`\\`lua \n--code\n \\`\\`\\`");
 	}
 }

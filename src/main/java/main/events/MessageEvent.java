@@ -14,6 +14,7 @@ import com.mongodb.DBObject;
 import main.actions.ModAction;
 import main.actions.MuteAction;
 import main.database.DBManager;
+import main.handlers.MuteHandler;
 import main.lib.Constants;
 import main.lib.MessageObject;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -58,23 +59,26 @@ public class MessageEvent extends ListenerAdapter {
 		}
 		
 		//Sending Messages too quickly
-		MessageObject msg = new MessageObject(member.getId(), System.currentTimeMillis());
-		List<MessageObject> hist = track.get(member.getId());
-		hist.add(msg);
 		
-		for (Iterator<MessageObject> it = hist.iterator();it.hasNext();) {
-			MessageObject obj = it.next();
-			if (obj.isDeleted()) {
-				it.remove();
+		if (!(MuteHandler.isMuted(member.getId()))) {
+			MessageObject msg = new MessageObject(member.getId(), System.currentTimeMillis());
+			List<MessageObject> hist = track.get(member.getId());
+			hist.add(msg);
+			
+			for (Iterator<MessageObject> it = hist.iterator();it.hasNext();) {
+				MessageObject obj = it.next();
+				if (obj.isDeleted()) {
+					it.remove();
+				}
 			}
+			
+			if (hist.size() >= 5) {
+				ModAction mute = new MuteAction(member.getId(), member.getEffectiveName(), admin.getId(), admin2.getEffectiveName(), "You are sending messages too quickly.");
+				mute.execute(event.getGuild(), event.getChannel());
+			}
+			
+			track.replace(member.getId(), hist);
 		}
-		
-		if (hist.size() >= 5) {
-			ModAction mute = new MuteAction(member.getId(), member.getEffectiveName(), admin.getId(), admin2.getEffectiveName(), "You are sending messages too quickly.");
-			mute.execute(event.getGuild(), event.getChannel());
-		}
-		
-		track.replace(member.getId(), hist);
 		
 		//TODO: Sending repeating messages
 		

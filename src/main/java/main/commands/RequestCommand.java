@@ -20,6 +20,7 @@ public class RequestCommand extends Command {
 		help = "request <reason>";
 		cooldownScope = CooldownScope.CHANNEL;
 		cooldown = 180; // 3 minutes.
+		category = new Category("utility");
 	}
 	
 	@Override

@@ -13,6 +13,7 @@ public class MuteCommand extends Command {
 	public MuteCommand() {
 		name = "mute";
 		help = "mute <userID> [messageID]";
+		category = new Category("staff");
 	}
 	
 	@Override

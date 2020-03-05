@@ -13,6 +13,7 @@ public class WarnCommand extends Command {
 	public WarnCommand() {
 		name = "warn";
 		help = "warn <userID> [messageID]";
+		category = new Category("staff");
 	}
 	
 	@Override
