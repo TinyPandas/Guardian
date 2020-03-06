@@ -18,6 +18,7 @@ import main.commands.admin.OnDutyCommand;
 import main.commands.admin.RemoveMuteCommand;
 import main.commands.admin.RulesCommand;
 import main.commands.admin.UnmuteCommand;
+import main.commands.admin.ViewImageCommand;
 import main.commands.admin.WarnCommand;
 import main.lib.Constants;
 
@@ -45,6 +46,7 @@ public class CommandHandler extends CommandClientBuilder {
 					new RequestCommand(),
 					new OnDutyCommand(),
 					new OffDutyCommand(),
-					new FilterCommand());
+					new FilterCommand(),
+					new ViewImageCommand());
 	}
 }

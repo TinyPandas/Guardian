@@ -20,6 +20,13 @@ import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 
 public class Utils {
+	/**
+	 * 
+	 * @param event
+	 * @param required - User must be in Guild for arguments to return valid result.
+	 * @param delete - true: delete message, false: do not delete message.
+	 * @return
+	 */
 	public static CommandArguments getArgs(CommandEvent event, boolean required, boolean delete) {
 		String[] args = event.getArgs().split("\\s+");
 		Member admin = event.getMember();

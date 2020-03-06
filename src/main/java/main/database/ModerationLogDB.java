@@ -38,10 +38,14 @@ public class ModerationLogDB {
 			DBCursor cursor = logs.find(query);
 			DBObject index = cursor.one();
 			if (index != null) {
-				long occurance = (long) index.get("date");		
-				if (start - occurance < monthInMilli * 2L) { //Check if log occurred in past 2 months.
-					if (((String)index.get("action")).equalsIgnoreCase("muted")) {
-						ret += 1;
+				String action = index.get("action").toString();
+				
+				if (action.equalsIgnoreCase("muted")) {
+					long occurance = (long) index.get("date");		
+					if (start - occurance < monthInMilli * 2L) { //Check if log occurred in past 2 months.
+						if (((String)index.get("action")).equalsIgnoreCase("muted")) {
+							ret += 1;
+						}
 					}
 				}
 			}
@@ -54,6 +58,10 @@ public class ModerationLogDB {
 	}
 
 	public static DBObject generateLog(String userID, String modAction, String adminID, String reason, List<String> images, String messageID) {
+		if (reason.length() == 0 || reason.equalsIgnoreCase("")) {
+			reason = "No reason provided.";
+		}
+		
 		DBCollection logs = DBManager.getInstance().getCollection(Constants.ModLogs, userID);
 		long warns = logs.count() + 1; // Get how many warns/mutes a user has. + 1 for this infraction.
 
@@ -85,8 +93,15 @@ public class ModerationLogDB {
 			}
 		}
 		
-		DBObject log = new BasicDBObject("_id", warns).append("action", modAction).append("date", start)
-				.append("length", getTimeForWarn(warnsPastMonthSpan)).append("adminID", adminID).append("reason", temp);
+		DBObject log = new BasicDBObject("_id", warns)
+						.append("action", modAction)
+						.append("date", start)
+						.append("adminID", adminID)
+						.append("reason", temp);
+		
+		if (modAction.equalsIgnoreCase("muted")) {
+			((BasicDBObject)log).append("length", getTimeForWarn(warnsPastMonthSpan));
+		}
 
 		if (messageID != null) {
 			((BasicDBObject)log).append("messageID", messageID);
