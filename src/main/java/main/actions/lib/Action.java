@@ -1,4 +1,4 @@
-package main.actions;
+package main.actions.lib;
 
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.TextChannel;

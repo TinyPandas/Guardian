@@ -3,6 +3,7 @@ package main.actions;
 import java.awt.Color;
 import java.util.List;
 
+import main.actions.lib.ModAction;
 import main.handlers.MuteHandler;
 import main.lib.Constants;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -12,8 +13,8 @@ import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.TextChannel;
 
 public class UnmuteAction extends ModAction {
-	public UnmuteAction(String targetUserID, String targetUserName, String adminID, String adminName, String reason, List<String> images, String messageID) {
-		super(targetUserID, targetUserName, adminID, adminName, reason, images, messageID);
+	public UnmuteAction(String targetUserID, String targetUserName, String adminID, String adminName) {
+		super(targetUserID, targetUserName, adminID, adminName);
 	}
 
 	@Override

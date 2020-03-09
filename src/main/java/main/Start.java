@@ -41,7 +41,7 @@ public class Start {
 	private void setupBot(String token) {
 		try {
 			JDABuilder jdaBuilder = new JDABuilder(AccountType.BOT).setToken(token);
-			jdaBuilder.setActivity(Activity.playing("Beta_0.3"));
+			jdaBuilder.setActivity(Activity.playing("Beta_0.4"));
 			
 			MuteHandler handler = new MuteHandler();
 			handler.start();

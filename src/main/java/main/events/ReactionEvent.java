@@ -1,8 +1,8 @@
 package main.events;
 
-import main.actions.ModAction;
-import main.actions.MuteAction;
-import main.actions.WarnAction;
+import main.actions.infractions.MuteAction;
+import main.actions.infractions.WarnAction;
+import main.actions.lib.ModAction;
 import main.lib.Constants;
 import main.lib.Utils;
 import net.dv8tion.jda.api.entities.Member;

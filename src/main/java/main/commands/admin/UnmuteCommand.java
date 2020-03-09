@@ -3,8 +3,8 @@ package main.commands.admin;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 
-import main.actions.ModAction;
 import main.actions.UnmuteAction;
+import main.actions.lib.ModAction;
 import main.lib.CommandArguments;
 import main.lib.Utils;
 import net.dv8tion.jda.api.entities.Member;
@@ -27,7 +27,7 @@ public class UnmuteCommand extends Command {
 				return;
 			}
 			
-			ModAction action = new UnmuteAction(args.getTargetUserID(), args.getTargetUser().getEffectiveName(), args.getAdminID(), args.getAdmin().getEffectiveName(), args.getReason(), args.getImages(), args.getMessageID());
+			ModAction action = new UnmuteAction(args.getTargetUserID(), args.getTargetUser().getEffectiveName(), args.getAdminID(), args.getAdmin().getEffectiveName());
 			action.execute(event.getGuild(), event.getTextChannel());
 		}
 	}

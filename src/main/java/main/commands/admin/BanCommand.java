@@ -3,8 +3,8 @@ package main.commands.admin;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 
-import main.actions.BanAction;
-import main.actions.ModAction;
+import main.actions.infractions.BanAction;
+import main.actions.lib.ModAction;
 import main.lib.CommandArguments;
 import main.lib.Utils;
 import net.dv8tion.jda.api.entities.Member;

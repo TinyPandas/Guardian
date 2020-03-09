@@ -3,8 +3,8 @@ package main.commands.admin;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 
-import main.actions.ModAction;
 import main.actions.RemoveMuteAction;
+import main.actions.lib.ModAction;
 import main.lib.CommandArguments;
 import main.lib.Utils;
 import net.dv8tion.jda.api.entities.Member;
@@ -29,7 +29,7 @@ public class RemoveMuteCommand extends Command {
 			
 			String index = event.getMessage().getContentStripped().split("\\s+")[2];
 			
-			ModAction action = new RemoveMuteAction(args.getTargetUserID(), args.getTargetUser().getEffectiveName(), args.getAdminID(), args.getAdmin().getEffectiveName(), args.getReason(), index, args.getImages(), args.getMessageID());
+			ModAction action = new RemoveMuteAction(args.getTargetUserID(), args.getTargetUser().getEffectiveName(), args.getAdminID(), args.getAdmin().getEffectiveName(), index);
 			action.execute(event.getGuild(), event.getTextChannel());
 		}
 	}

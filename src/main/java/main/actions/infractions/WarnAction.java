@@ -1,4 +1,4 @@
-package main.actions;
+package main.actions.infractions;
 
 import java.awt.Color;
 import java.util.List;
@@ -6,6 +6,7 @@ import java.util.List;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 
+import main.actions.lib.InfractionAction;
 import main.database.DBManager;
 import main.database.ModerationLogDB;
 import main.lib.Constants;
@@ -13,7 +14,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.TextChannel;
 
-public class WarnAction extends ModAction {
+public class WarnAction extends InfractionAction {
 	public WarnAction(String targetUserID, String targetUserName, String adminID, String adminName, String reason, List<String> images, String messageID) {
 		super(targetUserID, targetUserName, adminID, adminName, reason, images, messageID);
 	}

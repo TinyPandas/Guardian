@@ -11,8 +11,8 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 
-import main.actions.ModAction;
-import main.actions.MuteAction;
+import main.actions.infractions.MuteAction;
+import main.actions.lib.ModAction;
 import main.database.DBManager;
 import main.handlers.MuteHandler;
 import main.lib.Constants;

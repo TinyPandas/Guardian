@@ -1,49 +1,32 @@
-package main.actions;
+package main.actions.infractions;
 
 import java.awt.Color;
 import java.util.List;
 
-import com.jagrosh.jdautilities.commons.utils.FinderUtil;
 import com.mongodb.DBObject;
 
-import main.Start;
+import main.actions.lib.InfractionAction;
 import main.database.DBManager;
 import main.database.ModerationLogDB;
 import main.lib.Constants;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.TextChannel;
-import net.dv8tion.jda.api.entities.User;
 
-public class BanAction extends ModAction {
-	public BanAction(String targetUserID, String targetUserName, String adminID, String adminName, String reason, List<String> images, String messageID) {
+public class KickAction extends InfractionAction {
+	public KickAction(String targetUserID, String targetUserName, String adminID, String adminName, String reason, List<String> images, String messageID) {
 		super(targetUserID, targetUserName, adminID, adminName, reason, images, messageID);
 	}
 
 	@Override
 	public boolean execute(Guild guild, TextChannel channelOfExecution) {
-		DBObject log = ModerationLogDB.generateLog(getTargetUserID(), "Banned", getAdminID(), getReason(), getImages(), getMessageID());
+		DBObject log = ModerationLogDB.generateLog(getTargetUserID(), "Kicked", getAdminID(), getReason(), getImages(), getMessageID());
 		DBManager.getInstance().addDocument(Constants.ModLogs, getTargetUserID(), log);
 		
-		Member m = guild.getMemberById(getTargetUserID());
-		if (m != null) {
-			m.ban(0, getReason());
-		} else {
-			guild.ban(getTargetUserID(), 0, getReason()).queue();
-		}
-		
-		User temp = null;
-		
-		if (getTargetUserName().equalsIgnoreCase(getTargetUserID())) {
-			List<User> users = FinderUtil.findUsers(getTargetUserID(), Start.getAPI());
-			if (users.size() > 0) {
-				temp = users.get(0);
-			}
-		}
+		guild.getMemberById(getTargetUserID()).kick().queue();
 		
 		EmbedBuilder result = new EmbedBuilder();
-		result.setTitle(String.format("User banned: <%s>", temp != null ? temp.getName() : getTargetUserName()));
+		result.setTitle(String.format("User kicked: <%s>", getTargetUserName()));
 		result.setDescription(log.get("reason").toString());
 		result.addField("Discord ID", getTargetUserID(), true);
 		result.addField("Name", getTargetUserName(), true);
@@ -58,5 +41,6 @@ public class BanAction extends ModAction {
 		kickBanLog.sendMessage(result.build()).queue();
 		
 		return false;
-	}	
+	}
+	
 }
