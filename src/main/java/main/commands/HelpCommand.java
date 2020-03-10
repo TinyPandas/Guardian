@@ -14,7 +14,7 @@ import net.dv8tion.jda.api.entities.Member;
 public class HelpCommand extends Command {
 	public HelpCommand() {
 		name = "help";
-		help = "help";
+		help = "Displays all commands and their basic help description.";
 		category = new Category("utility");
 	}
 	

@@ -12,7 +12,7 @@ import net.dv8tion.jda.api.entities.Member;
 public class MuteCommand extends Command {
 	public MuteCommand() {
 		name = "mute";
-		help = "mute <userID> [messageID]";
+		help = "mute <userID> [reason | messageID]";
 		category = new Category("staff");
 	}
 	

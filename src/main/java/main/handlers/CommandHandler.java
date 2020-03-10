@@ -12,9 +12,7 @@ import main.commands.admin.FilterCommand;
 import main.commands.admin.HistoryCommand;
 import main.commands.admin.KickCommand;
 import main.commands.admin.MuteCommand;
-import main.commands.admin.OffDutyCommand;
 import main.commands.admin.OfftopicCommand;
-import main.commands.admin.OnDutyCommand;
 import main.commands.admin.RemoveMuteCommand;
 import main.commands.admin.RulesCommand;
 import main.commands.admin.UnmuteCommand;
@@ -43,9 +41,7 @@ public class CommandHandler extends CommandClientBuilder {
 					new KickCommand(),
 					new RemoveMuteCommand(),
 					new BanCommand(),
-					new RequestCommand(),
-					new OnDutyCommand(),
-					new OffDutyCommand(),
+					new RequestCommand(),	
 					new FilterCommand(),
 					new ViewImageCommand());
 	}

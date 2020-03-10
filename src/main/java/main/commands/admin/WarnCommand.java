@@ -12,7 +12,7 @@ import net.dv8tion.jda.api.entities.Member;
 public class WarnCommand extends Command {
 	public WarnCommand() {
 		name = "warn";
-		help = "warn <userID> [messageID]";
+		help = "warn <userID> [reason | messageID]";
 		category = new Category("staff");
 	}
 	

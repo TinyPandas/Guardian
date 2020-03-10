@@ -26,7 +26,7 @@ public class HistoryCommand extends Command {
 		if (Utils.hasRoleWithName(user, "staff")) {
 			CommandArguments args = Utils.getArgs(event, false, true);
 			
-			if (args.getTargetUser().getUser().isBot()) {
+			if (args.getTargetUser() != null && args.getTargetUser().getUser().isBot()) {
 				return;
 			}
 			

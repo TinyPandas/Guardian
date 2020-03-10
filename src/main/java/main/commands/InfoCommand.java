@@ -9,6 +9,8 @@ public class InfoCommand extends Command {
 		help = "prompt the user to provide more information";
 		guildOnly = true;
 		category = new Category("utility");
+		cooldownScope = CooldownScope.CHANNEL;
+		cooldown = 30;
 	}
 	
 	@Override

@@ -9,6 +9,8 @@ public class NoCodeCommand extends Command {
 		help = "prompt user to provide code.";
 		guildOnly = true;
 		category = new Category("utility");
+		cooldownScope = CooldownScope.CHANNEL;
+		cooldown = 30;
 	}
 	
 	@Override
