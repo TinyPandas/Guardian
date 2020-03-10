@@ -29,6 +29,7 @@ public class MuteAction extends InfractionAction {
 		
 		channelOfExecution.getHistoryBefore(messageId, 50).queue(history -> {
 			List<Message> retrieved = history.getRetrievedHistory();
+			int count = 0;
 			for (Message m:retrieved) {
 				long postDate = m.getTimeCreated().toInstant().getEpochSecond();
 				long dif = start-postDate;
@@ -41,7 +42,7 @@ public class MuteAction extends InfractionAction {
 				if (chatLog == null) {
 					chatLog = channelOfExecution.getGuild().getTextChannelsByName("chat-log", true).get(0);
 				}
-				if (m.getAuthor().getId().equalsIgnoreCase(getTargetUserID()) && dif <= 300) {
+				if (m.getAuthor().getId().equalsIgnoreCase(getTargetUserID()) && count < 10) {
 					EmbedBuilder builder = new EmbedBuilder();
 					builder.setTitle("**Message Deleted**");
 					builder.addField("User", m.getMember().getEffectiveName(), true);
