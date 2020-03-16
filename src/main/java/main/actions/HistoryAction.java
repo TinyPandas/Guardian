@@ -8,6 +8,7 @@ import com.mongodb.DBObject;
 
 import main.actions.lib.ModAction;
 import main.database.DBManager;
+import main.handlers.MuteHandler;
 import main.lib.Constants;
 import main.lib.Utils;
 import net.dv8tion.jda.api.entities.Guild;
@@ -25,9 +26,14 @@ public class HistoryAction extends ModAction {
 	public boolean execute(Guild guild, TextChannel channelOfExecution) {
 		DBCollection logs = DBManager.getInstance().getCollection(Constants.ModLogs, getTargetUserID());
 		
+		boolean sentTop = false;
 		String currentMessage = "";
 		
 		DBCursor cursor = logs.find();
+		if (cursor.size() == 0) {
+			channelOfExecution.sendMessage("No user history found.").queue();
+			return false;
+		}
 		DBObject currentLog = cursor.next();
 		
 		//TODO Cleanup
@@ -40,8 +46,12 @@ public class HistoryAction extends ModAction {
 				adminName = guild.getMemberById(adminID).getEffectiveName();
 			}
 			String reason = currentLog.get("reason").toString();
-			int actLength = (int)currentLog.get("length");
-			String length = Utils.getLength(actLength);
+			int actLength = 0;
+			String length = null;
+			if (currentLog.containsField("length")) {
+				actLength = (int)currentLog.get("length");
+				length = Utils.getLength(actLength);
+			}
 			String date = Utils.getDate((long)currentLog.get("date"));
 			String imageList = null, messageID = null;
 			if (currentLog.containsField("images")) {
@@ -69,10 +79,20 @@ public class HistoryAction extends ModAction {
 				messagePassesFilter = true;
 			}
 			
+			if (!sentTop) {
+				currentMessage = guild.getMemberById(adminID).getAsMention() + ", _**Mute History for user `" + getTargetUserID() 
+				+ "` (" + guild.getMemberById(getTargetUserID()).getEffectiveName() + ")**_ \n User Status: " + (MuteHandler.isMuted(getTargetUserID()) ? " Muted" : " Not muted")
+				+ " \n ";
+				sentTop = true;
+			}
+			
 			if (messagePassesFilter) {
 				String line1 = currentLog.get("_id") + ": **" + action + "** on " + date + "\n";
 				String line2 = action + " by: `" + adminID + "` (`" + adminName + "`)\n";
-				String line3 = "Length: " + length + "\n";
+				String line3 = "";
+				if (length != null) {
+					line3 = "Length: " + length + "\n";
+				}
 				String line4 = "Reason: \n```" + reason + "```\n";
 				String line5 = "";
 				

@@ -29,7 +29,7 @@ public class BanAction extends InfractionAction {
 		
 		Member m = guild.getMemberById(getTargetUserID());
 		if (m != null) {
-			m.ban(0, getReason());
+			m.ban(0, getReason()).queue();
 		} else {
 			guild.ban(getTargetUserID(), 0, getReason()).queue();
 		}

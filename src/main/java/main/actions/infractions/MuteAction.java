@@ -24,7 +24,11 @@ public class MuteAction extends InfractionAction {
 	
 	private String contextString = "";
 	
-	public void deleteContext(TextChannel channelOfExecution, String messageId) {
+	public void deleteContext(TextChannel channelOfExecution, String messageId, int limit, final boolean logEach) {
+		if (limit == -1) {
+			limit = 10;
+		}
+		final int countLimit = limit;
 		final long start = System.currentTimeMillis() / 1000L;
 		
 		channelOfExecution.getHistoryBefore(messageId, 50).queue(history -> {
@@ -42,7 +46,7 @@ public class MuteAction extends InfractionAction {
 				if (chatLog == null) {
 					chatLog = channelOfExecution.getGuild().getTextChannelsByName("chat-log", true).get(0);
 				}
-				if (m.getAuthor().getId().equalsIgnoreCase(getTargetUserID()) && count < 10) {
+				if (m.getAuthor().getId().equalsIgnoreCase(getTargetUserID()) && count < countLimit) {
 					EmbedBuilder builder = new EmbedBuilder();
 					builder.setTitle("**Message Deleted**");
 					builder.addField("User", m.getMember().getEffectiveName(), true);
@@ -50,14 +54,18 @@ public class MuteAction extends InfractionAction {
 					builder.addField("Content", m.getContentRaw(), false);
 					
 					chatLog.sendMessage(builder.build()).queue();
-					contextString = m.getContentRaw().replaceAll("'", "") + "\n" + contextString;
+					
+					if (logEach) {
+						contextString = m.getContentRaw().replaceAll("'", "") + "\n" + contextString;
+					}
+					
 					m.delete().queue();
 				}
 			}
 			
 			if (contextString.length() > 0) {
-				contextString += getReason();
-				setReason(contextString);
+				contextString += "\n" + getReason();
+				setReason("``` \n" + contextString + " \n```");
 			}
 			
 			execute(channelOfExecution.getGuild(), channelOfExecution);

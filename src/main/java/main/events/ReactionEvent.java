@@ -45,7 +45,7 @@ public class ReactionEvent extends ListenerAdapter {
 				action.execute(event.getGuild(), event.getChannel());
 			} else if(reactionName.equalsIgnoreCase(Constants.mute_context)) {
 				action = new MuteAction(author.getId(), author.getEffectiveName(), admin.getId(), admin.getEffectiveName(), m.getContentRaw(), Utils.downloadAttachments(m), m.getId());
-				((MuteAction)action).deleteContext(event.getChannel(), m.getId());
+				((MuteAction)action).deleteContext(event.getChannel(), m.getId(), -1, true);
 			}
 		});
 	}

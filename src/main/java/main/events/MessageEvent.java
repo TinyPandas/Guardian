@@ -17,8 +17,10 @@ import main.database.DBManager;
 import main.handlers.MuteHandler;
 import main.lib.Constants;
 import main.lib.MessageObject;
+import main.lib.Utils;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageDeleteEvent;
@@ -28,6 +30,7 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 public class MessageEvent extends ListenerAdapter {
 	HashMap<String, List<MessageObject>> track = new HashMap<>();
+	HashMap<String, List<String>> msgHist = new HashMap<>();
 	
 	@Override
 	public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
@@ -36,6 +39,14 @@ public class MessageEvent extends ListenerAdapter {
 		
 		if (member.getUser().isBot() || member.getUser().isFake()) {
 			return;
+		}
+		
+		/** Log Images */ 
+		List<String> attachments = new ArrayList<String>();
+		
+		Message m = event.getMessage();
+		if (m != null) {
+			attachments = Utils.downloadAttachments(m);
 		}
 		
 		User admin = event.getJDA().getSelfUser();
@@ -52,6 +63,10 @@ public class MessageEvent extends ListenerAdapter {
 							.append("edited", false)
 							.append("deleted", false);
 		
+		if (attachments.size() > 0) {
+			((BasicDBObject)messageLog).append("images", String.join(", ", attachments));
+		}
+		
 		manager.addDocument(Constants.MainDB, Constants.ChatLogs, messageLog);
 		
 		if (!(track.containsKey(member.getId()))) {
@@ -59,7 +74,6 @@ public class MessageEvent extends ListenerAdapter {
 		}
 		
 		//Sending Messages too quickly
-		
 		if (!(MuteHandler.isMuted(member.getId()))) {
 			MessageObject msg = new MessageObject(member.getId(), System.currentTimeMillis());
 			List<MessageObject> hist = track.get(member.getId());
@@ -74,13 +88,46 @@ public class MessageEvent extends ListenerAdapter {
 			
 			if (hist.size() >= 5) {
 				ModAction mute = new MuteAction(member.getId(), member.getEffectiveName(), admin.getId(), admin2.getEffectiveName(), "You are sending messages too quickly.", new ArrayList<>(), null);
-				mute.execute(event.getGuild(), event.getChannel());
+				((MuteAction)mute).deleteContext(event.getChannel(), event.getMessageId(), hist.size(), true);
+				//mute.execute(event.getGuild(), event.getChannel());
 			}
 			
 			track.replace(member.getId(), hist);
 		}
 		
-		//TODO: Sending repeating messages
+		//Sending repeating messages
+		if (!(msgHist.containsKey(member.getId()))) {
+			msgHist.put(member.getId(), new ArrayList<>());
+		}
+		
+		if (!(MuteHandler.isMuted(member.getId()))) {
+			List<String> pastMessages = msgHist.get(member.getId());
+			String currentMessage = event.getMessage().getContentStripped();
+			
+			int matches = 0;
+			
+			if (pastMessages.size() > 0) { 
+				for (int i=pastMessages.size();i>0;i--) {
+					if (pastMessages.get(i-1).equalsIgnoreCase(currentMessage)) {
+						matches++;
+					}
+				}
+			}
+			
+			pastMessages.add(currentMessage);
+			
+			if (pastMessages.size() > 10) {
+				pastMessages.remove(0); //First in first out
+			}
+			
+			if (matches >= 3) {
+				ModAction mute = new MuteAction(member.getId(), member.getEffectiveName(), admin.getId(), admin2.getEffectiveName(), "Sending the same message repeatedly. \n " + currentMessage + " (x" + matches + ")", new ArrayList<>(), null);
+				((MuteAction)mute).deleteContext(event.getChannel(), event.getMessageId(), matches, false);
+				//mute.execute(event.getGuild(), event.getChannel());
+			}
+			
+			msgHist.replace(member.getId(), pastMessages);
+		}
 		
 		//Message filtered words.
 		String[] words = event.getMessage().getContentStripped().split("\\s+");
