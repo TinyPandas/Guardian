@@ -56,8 +56,8 @@ public class ModerationLogDB {
 
 		return ret;
 	}
-
-	public static DBObject generateLog(String userID, String modAction, String adminID, String reason, List<String> images, String messageID) {
+	
+	public static DBObject generateLog(String userID, String modAction, String adminID, String reason, List<String> images, String messageID, int length, long date) {
 		if (reason.length() == 0 || reason.equalsIgnoreCase("")) {
 			reason = "No reason provided.";
 		}
@@ -65,7 +65,7 @@ public class ModerationLogDB {
 		DBCollection logs = DBManager.getInstance().getCollection(Constants.ModLogs, userID);
 		long warns = logs.count() + 1; // Get how many warns/mutes a user has. + 1 for this infraction.
 
-		long start = System.currentTimeMillis();
+		long start = (date != -1) ? date : System.currentTimeMillis();
 		int warnsPastMonthSpan = getWarnsInMonthSpan(logs, start);
 
 		String temp = "";
@@ -99,18 +99,24 @@ public class ModerationLogDB {
 						.append("adminID", adminID)
 						.append("reason", temp);
 		
-		if (modAction.equalsIgnoreCase("muted")) {
+		if (modAction.equalsIgnoreCase("muted") && length > -1) {
 			((BasicDBObject)log).append("length", getTimeForWarn(warnsPastMonthSpan));
+		} else if(length == -1) {
+			((BasicDBObject)log).append("length", length);
 		}
 
 		if (messageID != null) {
 			((BasicDBObject)log).append("messageID", messageID);
 		}
 		
-		if (images.size() > 0) {
+		if (images != null && images.size() > 0) {
 			((BasicDBObject)log).append("images", String.join(", ", images));
 		}
 		
 		return log;
+	}
+
+	public static DBObject generateLog(String userID, String modAction, String adminID, String reason, List<String> images, String messageID) {
+		return generateLog(userID, modAction, adminID, reason, images, messageID, -1, -1);
 	}
 }

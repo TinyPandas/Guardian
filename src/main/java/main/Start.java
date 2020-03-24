@@ -11,6 +11,7 @@ import javax.security.auth.login.LoginException;
 
 import org.apache.commons.lang3.StringUtils;
 
+import main.database.DBParser;
 import main.events.MemberUpdateEvent;
 import main.events.MessageEvent;
 import main.events.ReactionEvent;
@@ -54,6 +55,13 @@ public class Start {
 			
 			api = jdaBuilder.build(); //Finalize setup of the JDA instance
 			api.awaitReady(); //Wait for Discord connection to setup.
+			
+			Thread t = new Thread() {
+				public void run() {
+					DBParser.importOldData("data_1.db");
+				}
+			};
+			t.start();
 		} catch (InterruptedException | LoginException e) {
 			e.printStackTrace();
 			System.exit(0);
