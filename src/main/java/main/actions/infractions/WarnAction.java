@@ -25,9 +25,8 @@ public class WarnAction extends InfractionAction {
 		DBCollection logs = DBManager.getInstance().addDocument(Constants.ModLogs, getTargetUserID(), log);
 		
 		EmbedBuilder result = new EmbedBuilder();
-		result.setTitle(String.format("<%s> has been warned.", getTargetUserName()));
-		result.setDescription("Reason:\n" + log.get("reason"));
-		result.addField("Times muted", Long.toString(logs.count()), true);
+		result.setTitle(String.format("User Warned: <%s>", getTargetUserName()));
+		result.setDescription(log.get("reason").toString());
 		result.addField("Discord ID", getTargetUserID(), true);
 		result.addField("Name", getTargetUserName(), true);
 		result.addField("Moderator ID", getAdminID(), true);

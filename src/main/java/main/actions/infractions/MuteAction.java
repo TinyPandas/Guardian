@@ -80,9 +80,9 @@ public class MuteAction extends InfractionAction {
 		
 		EmbedBuilder result = new EmbedBuilder();
 		result.setTitle(String.format("<%s> has been muted.", getTargetUserName()));
-		result.setDescription("Reason:\n" + log.get("reason"));
+		result.setDescription(log.get("reason").toString());
 		result.addField("Length", Utils.getLength(length), true);
-		result.addField("Times muted", Long.toString(logs.count()), true);
+		result.addField("Times muted", Long.toString(logs.count() - 1), true); //-1 to not count this instance.
 		result.addField("Discord ID", getTargetUserID(), true);
 		result.addField("Name", getTargetUserName(), true);
 		result.addField("Moderator ID", getAdminID(), true);
@@ -109,6 +109,7 @@ public class MuteAction extends InfractionAction {
 			result.setTitle(String.format("You have been muted in %s.", guild.getName()));
 			result.addField("Length", Utils.getLength(length), true);
 			result.addField("Times muted", Long.toString(logs.count()), true);
+			result.setFooter("Take this time to think about what you did. You only get so many chances...");
 			pc.sendMessage(result.build()).queue();
 		});
 		

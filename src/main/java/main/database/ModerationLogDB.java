@@ -100,9 +100,9 @@ public class ModerationLogDB {
 						.append("reason", temp);
 		
 		if (modAction.equalsIgnoreCase("muted") && length > -1) {
-			((BasicDBObject)log).append("length", getTimeForWarn(warnsPastMonthSpan));
-		} else if(length == -1) {
 			((BasicDBObject)log).append("length", length);
+		} else if(length == -1) {
+			((BasicDBObject)log).append("length", getTimeForWarn(warnsPastMonthSpan));
 		}
 
 		if (messageID != null) {

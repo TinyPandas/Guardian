@@ -81,7 +81,7 @@ public class HistoryAction extends ModAction {
 			
 			if (!sentTop) {
 				currentMessage = guild.getMemberById(adminID).getAsMention() + ", _**Mute History for user `" + getTargetUserID() 
-				+ "` (" + guild.getMemberById(getTargetUserID()).getEffectiveName() + ")**_ \n User Status: " + (MuteHandler.isMuted(getTargetUserID()) ? " Muted" : " Not muted")
+				+ "` (`" + guild.getMemberById(getTargetUserID()).getEffectiveName() + "`)**_ \n User Status: " + (MuteHandler.isMuted(getTargetUserID()) ? " Muted" : " Not muted")
 				+ " \n ";
 				sentTop = true;
 			}

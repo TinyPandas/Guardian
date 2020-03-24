@@ -37,7 +37,7 @@ public class MessageEvent extends ListenerAdapter {
 		super.onGuildMessageReceived(event);
 		Member member = event.getMember();
 		
-		if (member.getUser().isBot() || member.getUser().isFake()) {
+		if (member.getUser() == null || member.getUser().isBot() || member.getUser().isFake()) {
 			return;
 		}
 		
