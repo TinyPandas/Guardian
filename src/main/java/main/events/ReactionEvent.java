@@ -33,19 +33,24 @@ public class ReactionEvent extends ListenerAdapter {
 			
 			ModAction action = null;
 			
-			//TODO Log deletion in Constants.chat_log
-			m.delete().queue();
-			
+			boolean del = false;
 			
 			if (reactionName.equalsIgnoreCase(Constants.mute)) {
 				action = new MuteAction(author.getId(), author.getEffectiveName(), admin.getId(), admin.getEffectiveName(), m.getContentRaw(), Utils.downloadAttachments(m), m.getId());
 				action.execute(event.getGuild(), event.getChannel());
+				del = true;
 			} else if(reactionName.equalsIgnoreCase(Constants.warn)) {
 				action = new WarnAction(author.getId(), author.getEffectiveName(), admin.getId(), admin.getEffectiveName(), m.getContentRaw(), Utils.downloadAttachments(m), m.getId());
 				action.execute(event.getGuild(), event.getChannel());
+				del = true;
 			} else if(reactionName.equalsIgnoreCase(Constants.mute_context)) {
 				action = new MuteAction(author.getId(), author.getEffectiveName(), admin.getId(), admin.getEffectiveName(), m.getContentRaw(), Utils.downloadAttachments(m), m.getId());
 				((MuteAction)action).deleteContext(event.getChannel(), m.getId(), -1, true);
+				del = true;
+			}
+			
+			if (del) {
+				m.delete().queue();
 			}
 		});
 	}

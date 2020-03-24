@@ -104,12 +104,20 @@ public class MessageEvent extends ListenerAdapter {
 			List<String> pastMessages = msgHist.get(member.getId());
 			String currentMessage = event.getMessage().getContentStripped();
 			
-			int matches = 0;
+			int consecutiveMatches = 0;
+			String lastMatch = "";
 			
 			if (pastMessages.size() > 0) { 
 				for (int i=pastMessages.size();i>0;i--) {
-					if (pastMessages.get(i-1).equalsIgnoreCase(currentMessage)) {
-						matches++;
+					String indexMessage = pastMessages.get(i-1);
+					
+					if (indexMessage.length() > 0) { //Only act if message has content.
+						if (lastMatch.equalsIgnoreCase("") || !(lastMatch.equalsIgnoreCase(indexMessage))) {
+							lastMatch = indexMessage;
+							consecutiveMatches = 0;
+						} else if(lastMatch.equalsIgnoreCase(indexMessage)) {
+							consecutiveMatches += 1;
+						}
 					}
 				}
 			}
@@ -120,10 +128,12 @@ public class MessageEvent extends ListenerAdapter {
 				pastMessages.remove(0); //First in first out
 			}
 			
-			if (matches >= 3) {
-				ModAction mute = new MuteAction(member.getId(), member.getEffectiveName(), admin.getId(), admin2.getEffectiveName(), "Sending the same message repeatedly. \n " + currentMessage + " (x" + matches + ")", new ArrayList<>(), null);
-				((MuteAction)mute).deleteContext(event.getChannel(), event.getMessageId(), matches, false);
+			if (consecutiveMatches >= 3) {
+				ModAction mute = new MuteAction(member.getId(), member.getEffectiveName(), admin.getId(), admin2.getEffectiveName(), "Sending the same message repeatedly. \n " + currentMessage + " (x" + consecutiveMatches + ")", new ArrayList<>(), null);
+				((MuteAction)mute).deleteContext(event.getChannel(), event.getMessageId(), consecutiveMatches, false);
 				//mute.execute(event.getGuild(), event.getChannel());
+				
+				pastMessages = new ArrayList<>();
 			}
 			
 			msgHist.replace(member.getId(), pastMessages);

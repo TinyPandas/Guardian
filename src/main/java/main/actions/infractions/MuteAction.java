@@ -104,6 +104,11 @@ public class MuteAction extends InfractionAction {
 		}
 		
 		muteLog.sendMessage(result.build()).queue();
+
+		if (channelOfExecution.getParent().getId().equalsIgnoreCase("356054271680184324")) {
+			channelOfExecution.sendMessage(result.build()).queue();
+		}
+		
 		guild.getMemberById(getTargetUserID()).getUser().openPrivateChannel().queue(pc -> {
 			result.clearFields();
 			result.setTitle(String.format("You have been muted in %s.", guild.getName()));

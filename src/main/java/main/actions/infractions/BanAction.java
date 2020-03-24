@@ -57,6 +57,10 @@ public class BanAction extends InfractionAction {
 			kickBanLog = guild.getTextChannelsByName("kick-ban-log", true).get(0);
 		}
 		kickBanLog.sendMessage(result.build()).queue();
+
+		if (channelOfExecution.getParent().getId().equalsIgnoreCase("356054271680184324")) {
+			channelOfExecution.sendMessage(result.build()).queue();
+		}
 		
 		return false;
 	}	
