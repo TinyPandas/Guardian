@@ -26,29 +26,34 @@ public class RequestCommand extends Command {
 	protected void execute(CommandEvent event) {
 		String reason = event.getArgs();
 		
-		TextChannel cmds = event.getGuild().getTextChannelById(Constants.commands);
-		if (cmds == null) {
-			cmds = event.getGuild().getTextChannelsByName("commands", true).get(0);
-		}
+		if (reason.length() > 0) {
 		
-		Guild guild = event.getGuild();
-		Role staff = guild.getRolesByName("staff", true).get(0);
-		
-		List<String> staffList = new ArrayList<>();
-		
-		for (Member m:guild.getMembersWithRoles(staff)) {			
-			if (!m.getUser().isBot()) { 
-				if (m.getOnlineStatus() == OnlineStatus.ONLINE) {
-					staffList.add(m.getAsMention());
+			TextChannel cmds = event.getGuild().getTextChannelById(Constants.commands);
+			if (cmds == null) {
+				cmds = event.getGuild().getTextChannelsByName("commands", true).get(0);
+			}
+			
+			Guild guild = event.getGuild();
+			Role staff = guild.getRolesByName("staff", true).get(0);
+			
+			List<String> staffList = new ArrayList<>();
+			
+			for (Member m:guild.getMembersWithRoles(staff)) {			
+				if (!m.getUser().isBot()) { 
+					if (m.getOnlineStatus() == OnlineStatus.ONLINE) {
+						staffList.add(m.getAsMention());
+					}
 				}
 			}
+			
+			String requester = event.getMember().getAsMention();
+			String channel = event.getTextChannel().getAsMention();
+			String jumpTo = event.getMessage().getJumpUrl();
+			
+			cmds.sendMessage(String.format("%s | %s requested a mod in %s with reason: `%s` \n <%s>", String.join(", ", staffList), requester, channel, reason, jumpTo)).queue();
+			event.reply(String.format("%s staff have been notified.", staffList.size()));
+		} else {
+			event.reply("Please provie a reason when using the `;request` command. For example: `;request PersonA is spamming.`");
 		}
-		
-		String requester = event.getMember().getAsMention();
-		String channel = event.getTextChannel().getAsMention();
-		String jumpTo = event.getMessage().getJumpUrl();
-		
-		cmds.sendMessage(String.format("%s | %s requested a mod in %s with reason: `%s` \n <%s>", String.join(", ", staffList), requester, channel, reason, jumpTo)).queue();
-		event.reply(String.format("%s staff have been notified.", staffList.size()));
 	}
 }
