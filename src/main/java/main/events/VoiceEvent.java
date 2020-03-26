@@ -3,7 +3,10 @@ package main.events;
 import main.lib.Constants;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.GuildVoiceState;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.VoiceChannel;
 import net.dv8tion.jda.api.events.guild.GenericGuildEvent;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceJoinEvent;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceLeaveEvent;
@@ -43,6 +46,26 @@ public class VoiceEvent extends ListenerAdapter {
 		
 		if (correspondingChatChannel != null) {			
 			correspondingChatChannel.createPermissionOverride(event.getMember()).grant(Permission.MESSAGE_READ).queue();
+			
+//			correspondingChatChannel.getMemberPermissionOverrides().forEach(override -> {
+//				Member allowee = override.getMember();
+//				GuildVoiceState state = allowee.getVoiceState();
+//				VoiceChannel channel = state.getChannel();
+//				
+//				boolean deleteOverride = false;
+//				
+//				if (channel != null) {
+//					if (!(channel.getId().equalsIgnoreCase(voiceChannelID))) {
+//						deleteOverride = true;
+//					}
+//				} else {
+//					deleteOverride = true;
+//				}
+//				
+//				if (deleteOverride) {
+//					override.delete().queue();
+//				}
+//			});
 		}
 	}
 

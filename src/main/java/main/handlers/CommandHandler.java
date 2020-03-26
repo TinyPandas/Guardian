@@ -15,6 +15,7 @@ import main.commands.admin.MuteCommand;
 import main.commands.admin.OfftopicCommand;
 import main.commands.admin.RemoveMuteCommand;
 import main.commands.admin.RulesCommand;
+import main.commands.admin.ShutdownCommand;
 import main.commands.admin.UnmuteCommand;
 import main.commands.admin.ViewImageCommand;
 import main.commands.admin.WarnCommand;
@@ -43,6 +44,7 @@ public class CommandHandler extends CommandClientBuilder {
 					new BanCommand(),
 					new RequestCommand(),	
 					new FilterCommand(),
-					new ViewImageCommand());
+					new ViewImageCommand(),
+					new ShutdownCommand());
 	}
 }

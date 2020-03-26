@@ -1,6 +1,12 @@
 package main.handlers;
 
 import java.awt.Color;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.HashMap;
 
 import main.Start;
@@ -11,6 +17,8 @@ public class MuteHandler extends Thread {
 	//HashMap<userID, expirationOfMuteInMilli>
 	private static HashMap<String, Long> isMuted = new HashMap<>();
 	private static HashMap<String, String> userGuild = new HashMap<>();
+	
+	public static boolean finished = false;
 	
 	public static void mute(String guildID, String userID, long endTime) {
 		if (!isMuted(userID)) {
@@ -55,6 +63,8 @@ public class MuteHandler extends Thread {
 	}
 	
 	public void run() {
+		load();
+		
 		while (true) {
 			try {
 				Thread.sleep(60 * 1000); //60 seconds | 1 minute
@@ -72,5 +82,53 @@ public class MuteHandler extends Thread {
 				}
 			}
 		}
+	}
+	
+	public void load() {
+		File f = new File("mutedCache");
+		if (f.exists()) {
+			try (BufferedReader br = new BufferedReader(new FileReader(f))) {
+				String line = "";
+				while ((line = br.readLine()) != null) {
+					System.out.println("Reading: " + line);
+					String userID = line.split(":")[0];
+					String endTimeStr = line.split(":")[1];
+					Long endTime = Long.valueOf(endTimeStr);
+					
+					isMuted.put(userID, endTime);
+				}
+			} catch (IOException ie) {
+				ie.printStackTrace();
+			}
+		}
+	}
+	
+	public static void save() {
+		File f = new File("mutedCache");
+		if (f.exists()) {
+			f.delete();
+		}
+		
+		try {
+			f.createNewFile();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		//assume f exists at this point.
+		try (BufferedWriter bw = new BufferedWriter(new FileWriter(f))) {
+			for (String userID:isMuted.keySet()) {
+				Long endTime = isMuted.get(userID);
+				
+				String line = userID + ":" + endTime + "\n";
+				
+				System.out.println("Writing: " + line);
+				bw.write(line);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		finished = true;
 	}
 }

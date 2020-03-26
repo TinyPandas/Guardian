@@ -13,6 +13,7 @@ public class ViewImageCommand extends Command {
 	public ViewImageCommand() {
 		name = "viewimage";
 		help = "View an image that was logged to a users infraction";
+		category = new Category("staff");
 	}
 	
 	@Override

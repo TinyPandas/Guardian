@@ -231,6 +231,7 @@ public class MessageEvent extends ListenerAdapter {
 		DBObject dbLog = new BasicDBObject()
 				.append("messageID", event.getMessage().getId())
 				.append("authorID", event.getMember().getId())
+				.append("channelID", event.getChannel().getId())
 				.append("before", oldContent)
 				.append("after", event.getMessage().getContentDisplay());
 		
@@ -245,6 +246,10 @@ public class MessageEvent extends ListenerAdapter {
 		DBCollection col = manager.getCollection(Constants.MainDB, Constants.ChatLogs);
 		DBObject query = new BasicDBObject("messageID", event.getMessageId());
 		DBCursor cur = col.find(query);
+		//TODO log message anyways, if no results found.
+		if (cur.size() == 0) {
+			return;
+		}
 		DBObject obj = cur.next();
 		String oldContent = "";
 		
@@ -271,7 +276,8 @@ public class MessageEvent extends ListenerAdapter {
 		DBObject dbLog = new BasicDBObject()
 				.append("messageID", obj.get("messageID"))
 				.append("authorID", obj.get("authorID"))
-				.append("before", oldContent);
+				.append("before", oldContent)
+				.append("channelID", event.getChannel().getId());
 		
 		manager.addDocument(Constants.MainDB, Constants.ChatDelLogs, dbLog);
 	}

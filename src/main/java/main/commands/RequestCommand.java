@@ -53,7 +53,7 @@ public class RequestCommand extends Command {
 			cmds.sendMessage(String.format("%s | %s requested a mod in %s with reason: `%s` \n <%s>", String.join(", ", staffList), requester, channel, reason, jumpTo)).queue();
 			event.reply(String.format("%s staff have been notified.", staffList.size()));
 		} else {
-			event.reply("Please provie a reason when using the `;request` command. For example: `;request PersonA is spamming.`");
+			event.reply("Please provide a reason when using the `;request` command. For example: `;request PersonA is spamming.`");
 		}
 	}
 }
