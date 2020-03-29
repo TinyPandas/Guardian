@@ -23,8 +23,6 @@ public class OfftopicCommand extends Command {
 		event.getMessage().delete().queue();
 		event.reply("This is not the place to enjoy off-topic conversation. We advise that you carry your conversation over to " 
 					+ event.getGuild().getTextChannelById(Constants.commonsID)
-					+ " or "
-					+ event.getGuild().getTextChannelById(Constants.offtopicID)
 					+ ". **Any further off-topic conversation can/will be reprimanded accordingly.**");
 	}
 }

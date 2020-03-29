@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.util.HashMap;
 
 import main.Start;
+import main.lib.Constants;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 
@@ -33,11 +34,14 @@ public class MuteHandler extends Thread {
 	}
 	
 	public static boolean unmute(String userID, boolean early, boolean hasRole) {
+		System.out.println(userID);
 		if (isMuted(userID) || hasRole) {
 			isMuted.remove(userID);
 			
 			Guild guild = Start.getAPI().getGuildById(userGuild.get(userID));
 			guild.removeRoleFromMember(userID, guild.getRolesByName("muted", true).get(0)).queue();
+			
+			guild.getTextChannelsByName("mute-log", true).get(0).sendMessage(guild.getMemberById(userID).getAsMention() + " has been unmuted.").queue();
 			
 			try {
 				guild.mute(guild.getMemberById(userID), false).queue();
@@ -67,7 +71,7 @@ public class MuteHandler extends Thread {
 		
 		while (true) {
 			try {
-				Thread.sleep(60 * 1000); //60 seconds | 1 minute
+				Thread.sleep(1000); //60 seconds | 1 minute
 			} catch (InterruptedException ie) {
 				
 			} finally {
@@ -75,9 +79,15 @@ public class MuteHandler extends Thread {
 				
 				for (String muted:isMuted.keySet()) {
 					long endTime = isMuted.get(muted);
+					System.out.println(String.format("%s: %s | %s", muted, current, endTime));
 					
 					if (current >= endTime) {
-						unmute(muted, false, false);
+						try {
+							unmute(muted, false, false);
+						} catch (NullPointerException npe) {
+							npe.printStackTrace();
+							System.out.println("Failed to unmute <@" + muted + ">.");
+						}
 					}
 				}
 			}

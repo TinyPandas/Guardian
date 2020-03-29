@@ -125,7 +125,7 @@ public class Utils {
 		return date.toGMTString();
 	}
 
-	public static String getLength(long length) {
+	public static String getLength(long length) {	
 		if (length >= 60) {
 			return Long.toString(length / 60) + " hours";
 		} else {

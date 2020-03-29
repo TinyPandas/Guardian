@@ -48,6 +48,10 @@ public class UnmuteAction extends ModAction {
 				muteLog = guild.getTextChannelsByName("mute-log", true).get(0);
 			}
 			
+			if (channelOfExecution.getParent().getId().equalsIgnoreCase("356054271680184324")) {
+				channelOfExecution.sendMessage(result.build()).queue();
+			}
+			
 			//guild.removeRoleFromMember(getTargetUserID(), guild.getRolesByName("muted", true).get(0)).queue();
 			
 			muteLog.sendMessage(result.build()).queue();

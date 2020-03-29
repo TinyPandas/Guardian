@@ -37,7 +37,8 @@ public class MuteAction extends InfractionAction {
 			for (Message m:retrieved) {
 				long postDate = m.getTimeCreated().toInstant().getEpochSecond();
 				long dif = start-postDate;
-				if (dif > 300) {
+				//Last minute
+				if (dif > 60) {
 					break;
 				}
 				
@@ -89,7 +90,7 @@ public class MuteAction extends InfractionAction {
 		result.addField("Moderator", getAdminName(), true);
 		result.setColor(Color.RED);
 		
-		MuteHandler.mute(guild.getId(), getTargetUserID(), System.currentTimeMillis() + (length*60*1000));
+		MuteHandler.mute(guild.getId(), getTargetUserID(), System.currentTimeMillis() + ((length*1000) * 60));// + (length*60*1000));
 		
 		TextChannel muteLog = guild.getTextChannelById(Constants.mute_log);
 		if (muteLog == null) { 
@@ -112,7 +113,7 @@ public class MuteAction extends InfractionAction {
 		guild.getMemberById(getTargetUserID()).getUser().openPrivateChannel().queue(pc -> {
 			result.clearFields();
 			result.setTitle(String.format("You have been muted in %s.", guild.getName()));
-			result.addField("Length", Utils.getLength(length), true);
+			//result.addField("Length", Utils.getLength(length), true);
 			result.addField("Times muted", Long.toString(logs.count()), true);
 			result.setFooter("Take this time to think about what you did. You only get so many chances...");
 			pc.sendMessage(result.build()).queue();
