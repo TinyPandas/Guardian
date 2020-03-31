@@ -2,6 +2,8 @@ package main.actions.lib;
 
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.TextChannel;
 
@@ -10,7 +12,7 @@ public class InfractionAction extends ModAction {
 	private List<String> images;
 	private String messageID;
 	
-	public InfractionAction(String targetUserID, String targetUserName, String adminID, String adminName, String reason, List<String> images, String messageID) {
+	public InfractionAction(String targetUserID, String targetUserName, String adminID, String adminName, @Nullable String reason, @Nullable List<String> images, @Nullable String messageID) {
 		super(targetUserID, targetUserName, adminID, adminName);
 		this.reason = reason;
 		this.images = images;

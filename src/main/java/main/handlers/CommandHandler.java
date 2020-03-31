@@ -6,10 +6,13 @@ import java.lang.reflect.InvocationTargetException;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandClientBuilder;
 
+import main.commands.core.LoadCommand;
+import main.commands.core.ReloadCommand;
+import main.commands.core.UnloadCommand;
 import main.lib.Constants;
 
-public class CommandHandler extends CommandClientBuilder {
-	static String stripExtension(String str) {
+public class CommandHandler extends CommandClientBuilder {	
+	private String stripExtension(String str) {
 		if (str == null)
 			return null;
 		int pos = str.lastIndexOf(".");
@@ -25,6 +28,10 @@ public class CommandHandler extends CommandClientBuilder {
 		setOwnerId(Constants.pandaID);
 		setCoOwnerIds(Constants.megaID);
 		setEmojis("✅", "⚠", "❌");
+		
+		addCommand(new LoadCommand());
+		addCommand(new UnloadCommand());
+		addCommand(new ReloadCommand());
 
 		File file = new File("./src/main/java/main/commands");
 		String[] fileList = file.list();
@@ -37,10 +44,8 @@ public class CommandHandler extends CommandClientBuilder {
 			} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
 					| InvocationTargetException | NoSuchMethodException | SecurityException
 					| ClassNotFoundException e) {
-				//e.printStackTrace();
+				e.printStackTrace();
 			}
-			
-
 		}
 
 		file = new File("./src/main/java/main/commands/admin");
@@ -54,7 +59,7 @@ public class CommandHandler extends CommandClientBuilder {
 			} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
 					| InvocationTargetException | NoSuchMethodException | SecurityException
 					| ClassNotFoundException e) {
-				//e.printStackTrace();
+				e.printStackTrace();
 			}
 		}
 	}

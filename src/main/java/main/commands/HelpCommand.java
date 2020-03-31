@@ -19,7 +19,7 @@ public class HelpCommand extends Command {
 	}
 	
 	@Override
-	protected void execute(CommandEvent event) {
+	protected void execute(CommandEvent event) {		
 		Member member = event.getMember();
 		boolean isStaff = Utils.hasRoleWithName(member, "staff");
 		
@@ -31,14 +31,20 @@ public class HelpCommand extends Command {
 		
 		String utility = "";
 		String staff = "";
+		String undefined = "";
 		
 		for (Command command:commands) {
 			String helpLine = "`" + client.getPrefix() + command.getName() + "` - " + command.getHelp();
+			Category cat = command.getCategory();
 			
-			if (command.getCategory().getName() == "utility") {
-				utility += helpLine + "\n";
-			} else if(command.getCategory().getName() == "staff") {
-				staff += helpLine + "\n";
+			if (cat != null) {
+				if (cat.getName() == "utility") {
+					utility += helpLine + "\n";
+				} else if(cat.getName() == "staff") {
+					staff += helpLine + "\n";
+				}
+			} else {
+				undefined += helpLine + "\n";
 			}
 		}
 		
@@ -46,6 +52,7 @@ public class HelpCommand extends Command {
 		if (isStaff) {
 			builder.addField("Staff", staff, false);
 		}
+		builder.addField("No Category", undefined, false);
 		
 		member.getUser().openPrivateChannel().queue(s -> {
 			s.sendMessage(builder.build()).queue();

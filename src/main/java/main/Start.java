@@ -21,7 +21,6 @@ import main.handlers.MuteHandler;
 import net.dv8tion.jda.api.AccountType;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
-import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
 
 public class Start {
@@ -56,8 +55,6 @@ public class Start {
 			
 			api = jdaBuilder.build(); //Finalize setup of the JDA instance
 			api.awaitReady(); //Wait for Discord connection to setup.
-			
-			api.getPresence().setPresence(OnlineStatus.OFFLINE, Activity.playing(";help"));
 			
 			Thread t = new Thread() {
 				public void run() {
