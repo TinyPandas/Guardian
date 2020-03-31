@@ -1,27 +1,23 @@
 package main.handlers;
 
+import java.io.File;
+import java.lang.reflect.InvocationTargetException;
+
+import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandClientBuilder;
 
-import main.commands.HelpCommand;
-import main.commands.InfoCommand;
-import main.commands.InviteCommand;
-import main.commands.NoCodeCommand;
-import main.commands.RequestCommand;
-import main.commands.admin.BanCommand;
-import main.commands.admin.FilterCommand;
-import main.commands.admin.HistoryCommand;
-import main.commands.admin.KickCommand;
-import main.commands.admin.MuteCommand;
-import main.commands.admin.OfftopicCommand;
-import main.commands.admin.RemoveMuteCommand;
-import main.commands.admin.RulesCommand;
-import main.commands.admin.ShutdownCommand;
-import main.commands.admin.UnmuteCommand;
-import main.commands.admin.ViewImageCommand;
-import main.commands.admin.WarnCommand;
 import main.lib.Constants;
 
 public class CommandHandler extends CommandClientBuilder {
+	static String stripExtension(String str) {
+		if (str == null)
+			return null;
+		int pos = str.lastIndexOf(".");
+		if (pos == -1)
+			return str;
+		return str.substring(0, pos);
+	}
+
 	public CommandHandler() {
 		setPrefix(";");
 		useHelpBuilder(false);
@@ -29,22 +25,37 @@ public class CommandHandler extends CommandClientBuilder {
 		setOwnerId(Constants.pandaID);
 		setCoOwnerIds(Constants.megaID);
 		setEmojis("✅", "⚠", "❌");
-		addCommands(new HelpCommand(),
-					new OfftopicCommand(),
-					new RulesCommand(),
-					new InviteCommand(),
-					new InfoCommand(),
-					new NoCodeCommand(),
-					new MuteCommand(),
-					new HistoryCommand(),
-					new WarnCommand(),
-					new UnmuteCommand(),
-					new KickCommand(),
-					new RemoveMuteCommand(),
-					new BanCommand(),
-					new RequestCommand(),	
-					new FilterCommand(),
-					new ViewImageCommand(),
-					new ShutdownCommand());
+
+		File file = new File("./src/main/java/main/commands");
+		String[] fileList = file.list();
+		for (String name : fileList) {
+			String cmdName = "main.commands." + stripExtension(name);
+			Command x;
+			try {
+				x = (Command) Class.forName(cmdName).getDeclaredConstructor().newInstance();
+				addCommand(x);
+			} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
+					| InvocationTargetException | NoSuchMethodException | SecurityException
+					| ClassNotFoundException e) {
+				//e.printStackTrace();
+			}
+			
+
+		}
+
+		file = new File("./src/main/java/main/commands/admin");
+		fileList = file.list();
+		for (String name : fileList) {
+			String cmdName = "main.commands.admin." + stripExtension(name);
+			Command x;
+			try {
+				x = (Command) Class.forName(cmdName).getDeclaredConstructor().newInstance();
+				addCommand(x);
+			} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
+					| InvocationTargetException | NoSuchMethodException | SecurityException
+					| ClassNotFoundException e) {
+				//e.printStackTrace();
+			}
+		}
 	}
 }
