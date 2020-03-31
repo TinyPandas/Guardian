@@ -3,6 +3,11 @@ package main.commands;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 
+/**
+ * Version 1.0
+ * @author TinyPanda
+ */
+
 public class NoCodeCommand extends Command {
 	public NoCodeCommand() {
 		name = "nocode";

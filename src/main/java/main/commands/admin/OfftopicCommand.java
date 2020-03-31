@@ -6,6 +6,11 @@ import com.jagrosh.jdautilities.command.CommandEvent;
 import main.lib.Constants;
 import main.lib.Utils;
 
+/**
+ * Version 1.0
+ * @author TinyPanda
+ */
+
 public class OfftopicCommand extends Command {
 	public OfftopicCommand() {
 		name = "offtopic";

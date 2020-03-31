@@ -9,6 +9,11 @@ import main.lib.Constants;
 import main.lib.Utils;
 import net.dv8tion.jda.api.EmbedBuilder;
 
+/**
+ * Version 1.0
+ * @author TinyPanda
+ */
+
 public class RulesCommand extends Command {
 	private static HashMap<String, String> rulesByIndex = new HashMap<>();
 	

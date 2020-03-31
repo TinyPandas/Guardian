@@ -7,6 +7,11 @@ import main.handlers.MuteHandler;
 import main.lib.Utils;
 import net.dv8tion.jda.api.entities.Member;
 
+/**
+ * Version 1.0
+ * @author TinyPanda
+ */
+
 public class ShutdownCommand extends Command {
 	public ShutdownCommand() {
 		name = "shutdown";

@@ -17,6 +17,11 @@ import main.lib.Constants;
 import main.lib.Utils;
 import net.dv8tion.jda.api.entities.Member;
 
+/**
+ * Version 1.0
+ * @author TinyPanda
+ */
+
 public class FilterCommand extends Command {
 	public FilterCommand() {
 		name = "filter";

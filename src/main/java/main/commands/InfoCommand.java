@@ -3,6 +3,11 @@ package main.commands;
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 
+/**
+ * Version 1.0
+ * @author TinyPanda
+ */
+
 public class InfoCommand extends Command {
 	public InfoCommand() {
 		name = "info";

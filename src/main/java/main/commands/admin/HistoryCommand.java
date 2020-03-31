@@ -12,6 +12,11 @@ import main.lib.CommandArguments;
 import main.lib.Utils;
 import net.dv8tion.jda.api.entities.Member;
 
+/**
+ * Version 1.0
+ * @author TinyPanda
+ */
+
 public class HistoryCommand extends Command {
 	public HistoryCommand() {
 		name = "history";

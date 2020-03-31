@@ -9,6 +9,11 @@ import main.lib.Utils;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.TextChannel;
 
+/**
+ * Version 1.0
+ * @author TinyPanda
+ */
+
 public class ViewImageCommand extends Command {
 	public ViewImageCommand() {
 		name = "viewimage";

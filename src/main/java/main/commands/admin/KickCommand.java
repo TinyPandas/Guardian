@@ -9,6 +9,11 @@ import main.lib.CommandArguments;
 import main.lib.Utils;
 import net.dv8tion.jda.api.entities.Member;
 
+/**
+ * Version 1.0
+ * @author TinyPanda
+ */
+
 public class KickCommand extends Command {
 	public KickCommand() {
 		name = "kick";
