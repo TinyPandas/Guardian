@@ -78,7 +78,7 @@ public class MuteAction extends InfractionAction {
 	@Override
 	public boolean execute(Guild guild, TextChannel channelOfExecution) {
 		// below currently accepts y,d,m,h (years, days, minutes, hours). Ex: ;mute user 15m reason
-		int length = -1;
+		long length = -1;
 		String reason = getReason();
 		String firstWord = reason.contains(" ") ? reason.split(" ")[0] : reason;
 		if (firstWord.length() > 0) {
@@ -117,7 +117,7 @@ public class MuteAction extends InfractionAction {
         
 		DBObject log = ModerationLogDB.generateLog(getTargetUserID(), "Muted", getAdminID(), reason, getImages(), getMessageID(), length);
 		DBCollection logs = DBManager.getInstance().addDocument(Constants.ModLogs, getTargetUserID(), log);
-		length = (int)log.get("length");
+		length = (long)log.get("length");
 		EmbedBuilder result = new EmbedBuilder();
 		result.setTitle(String.format("<%s> has been muted.", getTargetUserName()));
 		result.setDescription(log.get("reason").toString());

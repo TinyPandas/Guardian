@@ -57,7 +57,7 @@ public class ModerationLogDB {
 		return ret;
 	}
 	
-	public static DBObject generateLog(String userID, String modAction, String adminID, String reason, List<String> images, String messageID, int length, long date) {
+	public static DBObject generateLog(String userID, String modAction, String adminID, String reason, List<String> images, String messageID, long length, long date) {
 		if (reason.length() == 0 || reason.equalsIgnoreCase("")) {
 			reason = "No reason provided.";
 		}
@@ -116,7 +116,7 @@ public class ModerationLogDB {
 		return log;
 	}
 
-	public static DBObject generateLog(String userID, String modAction, String adminID, String reason, List<String> images, String messageID, int length) {
+	public static DBObject generateLog(String userID, String modAction, String adminID, String reason, List<String> images, String messageID, long length) {
 		return generateLog(userID, modAction, adminID, reason, images, messageID, length, -1);
 	}
 }

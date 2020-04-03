@@ -126,7 +126,15 @@ public class Utils {
 	}
 
 	public static String getLength(long length) {	
-		if (length >= 60) {
+		if (length >= 60 * 24 * 30 * 12) {
+			return Long.toString(length / (60*24*30*12)) + " years";
+		}
+		else if (length >= 60 * 24 * 30) {
+			return Long.toString(length / (60*24*30)) + " months";
+		}
+		else if (length >= 60*24) {
+			return Long.toString(length / (60*24)) + " days";
+		} else if (length >= 60) {
 			return Long.toString(length / 60) + " hours";
 		} else {
 			return Long.toString(length) + " minutes";
