@@ -24,7 +24,7 @@ public class BanAction extends InfractionAction {
 
 	@Override
 	public boolean execute(Guild guild, TextChannel channelOfExecution) {
-		DBObject log = ModerationLogDB.generateLog(getTargetUserID(), "Banned", getAdminID(), getReason(), getImages(), getMessageID());
+		DBObject log = ModerationLogDB.generateLog(getTargetUserID(), "Banned", getAdminID(), getReason(), getImages(), getMessageID(), -1);
 		DBManager.getInstance().addDocument(Constants.ModLogs, getTargetUserID(), log);
 		
 		Member m = guild.getMemberById(getTargetUserID());

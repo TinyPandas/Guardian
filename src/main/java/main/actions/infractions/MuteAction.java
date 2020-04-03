@@ -2,6 +2,8 @@ package main.actions.infractions;
 
 import java.awt.Color;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
@@ -74,11 +76,48 @@ public class MuteAction extends InfractionAction {
 	}
 	
 	@Override
-	public boolean execute(Guild guild, TextChannel channelOfExecution) {	
-		DBObject log = ModerationLogDB.generateLog(getTargetUserID(), "Muted", getAdminID(), getReason(), getImages(), getMessageID());
+	public boolean execute(Guild guild, TextChannel channelOfExecution) {
+		// below currently accepts y,d,m,h (years, days, minutes, hours). Ex: ;mute user 15m reason
+		int length = -1;
+		String reason = getReason();
+		String firstWord = reason.contains(" ") ? reason.split(" ")[0] : reason;
+		if (firstWord.length() > 0) {
+			Pattern p = Pattern.compile("[0-9]+[ydmh]");
+			Matcher m = p.matcher(firstWord);
+			if (m.find()) {
+                String match = m.group(0);
+				System.out.println("Match: "+match);
+				String numStr = match.substring(0,match.length() - 1);
+				int number = Integer.parseInt(numStr);
+				char lastChar = match.charAt(match.length() - 1);
+				switch (lastChar) {
+					case 'm':
+						break; // already in minutes
+					case 'h':
+						number *= 60;
+						break;
+					case 'd':
+						number *= 60*24;
+						break;
+					case 'y':
+						number *= 60*24*365;
+						break;
+					default:
+						break;
+				}
+				length = number;
+				String [] arr = reason.split(" ", 2);
+				if (arr.length > 1) {
+					reason = arr[1];
+				} else {
+					reason = "";
+				}
+            }
+		}
+        
+		DBObject log = ModerationLogDB.generateLog(getTargetUserID(), "Muted", getAdminID(), reason, getImages(), getMessageID(), length);
 		DBCollection logs = DBManager.getInstance().addDocument(Constants.ModLogs, getTargetUserID(), log);
-		int length = (int)log.get("length");
-		
+		length = (int)log.get("length");
 		EmbedBuilder result = new EmbedBuilder();
 		result.setTitle(String.format("<%s> has been muted.", getTargetUserName()));
 		result.setDescription(log.get("reason").toString());

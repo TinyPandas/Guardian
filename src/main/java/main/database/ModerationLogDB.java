@@ -116,7 +116,7 @@ public class ModerationLogDB {
 		return log;
 	}
 
-	public static DBObject generateLog(String userID, String modAction, String adminID, String reason, List<String> images, String messageID) {
-		return generateLog(userID, modAction, adminID, reason, images, messageID, -1, -1);
+	public static DBObject generateLog(String userID, String modAction, String adminID, String reason, List<String> images, String messageID, int length) {
+		return generateLog(userID, modAction, adminID, reason, images, messageID, length, -1);
 	}
 }
