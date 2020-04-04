@@ -1,7 +1,8 @@
 package main.lib;
 
 public class Constants {
-	public static final String guildID = "165202235226062848";
+	public static final String HomeGuildID = "653613008186245130";
+	public static final String ShGuildID = "165202235226062848";
 	
 	/** UserIDs **/
 	public static final String pandaID = "169208961533345792";
@@ -26,6 +27,7 @@ public class Constants {
 	public static final String voice_voice = "235169244919234560";
 	public static final String stream_chat = "689686462047715389";
 	public static final String stream_voice = "167092801807319051";
+	public static final String sitechat = "202986511145107458";
 	
 	/** Emote names **/
 	public static final String mute = "modMute";

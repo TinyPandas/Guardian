@@ -18,7 +18,6 @@ public class InviteCommand extends Command {
 	
 	@Override
 	protected void execute(CommandEvent event) {
-		event.getMessage().delete().queue();
 		event.reply("Invite your friends using: https://discord.gg/WHTAYrK");
 	}
 }

@@ -38,7 +38,11 @@ public class MessageEvent extends ListenerAdapter {
 		Member member = event.getMember();
 		TextChannel channel = event.getChannel();
 		
-		if (member.getUser() == null || member.getUser().isBot() || member.getUser().isFake()) {
+		if (channel.getId().equalsIgnoreCase(Constants.sitechat)) {
+			return;
+		}
+		
+		if (member.getUser().isBot() || member.getUser().isFake()) {
 			return;
 		}
 		
@@ -81,6 +85,10 @@ public class MessageEvent extends ListenerAdapter {
 			String raw = m.getContentRaw();
 			//Contains link to some roblox entity.
 			if (raw.contains("roblox.com")) {
+				validPost = true;
+			}
+			
+			if (Utils.hasRoleWithName(member, "staff")) {
 				validPost = true;
 			}
 			
@@ -210,17 +218,20 @@ public class MessageEvent extends ListenerAdapter {
 		DBCollection col = manager.getCollection(Constants.MainDB, Constants.ChatLogs);
 		DBObject query = new BasicDBObject("messageID", event.getMessageId());
 		DBCursor cur = col.find(query);
-		DBObject obj = cur.next();
 		String oldContent = "";
-		
-		if (obj != null) {
-			oldContent = obj.get("current").toString();
+	
+		if (cur.hasNext()) {
+			DBObject obj = cur.next();
 			
-			obj.put("edited", true);
-			obj.put("current", event.getMessage().getContentDisplay());
-			col.update(query, obj);
+			if (obj != null) {
+				oldContent = obj.get("current").toString();
+				
+				obj.put("edited", true);
+				obj.put("current", event.getMessage().getContentDisplay());
+				col.update(query, obj);
+			}
 		}
-		
+			
 		EmbedBuilder builder = new EmbedBuilder();
 		builder.setTitle("**Message Updated**");
 		builder.setColor(Color.YELLOW);
@@ -272,7 +283,7 @@ public class MessageEvent extends ListenerAdapter {
 		builder.setColor(Color.RED);
 		builder.addField("User", event.getGuild().getMemberById(obj.get("authorID").toString()).getEffectiveName(), true);
 		builder.addField("Channel", event.getChannel().getAsMention(), true);
-		builder.addField("Content", oldContent, false);
+		builder.addField("Content", oldContent.substring(0, 2000), false);
 		
 		TextChannel log = event.getGuild().getTextChannelById(Constants.chat_log);
 		if (log == null) {

@@ -1,6 +1,7 @@
 package main.events;
 
 import main.lib.Constants;
+import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.GuildVoiceState;
@@ -14,6 +15,56 @@ import net.dv8tion.jda.api.events.guild.voice.GuildVoiceMoveEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 public class VoiceEvent extends ListenerAdapter {
+	private static JDA jda;
+	private static Guild g;
+	
+	private static void purgeOverridesForVoiceChannel(TextChannel voiceChatChannel) {
+		voiceChatChannel.getMemberPermissionOverrides().forEach(override -> {
+			Member allowee = override.getMember();
+			GuildVoiceState state = allowee.getVoiceState();
+			VoiceChannel channel = state.getChannel();
+			
+			boolean deleteOverride = false;
+			
+			if (channel != null) {
+				if (!(channel.getId().equalsIgnoreCase(Constants.voice_voice))) {
+					deleteOverride = true;
+				}
+			} else {
+				deleteOverride = true;
+			}
+			
+			if (deleteOverride) {
+				override.delete().queue();
+			}
+		});
+	}
+	
+	public static Thread permCleanup = new Thread() {
+		public void run() {
+			g = jda.getGuildById(Constants.ShGuildID);
+			
+			while (jda != null) {
+				try {
+					Thread.sleep(60000); //Every minute
+				} catch (InterruptedException ie) {
+				} finally {
+					TextChannel voice_chat = g.getTextChannelById(Constants.voice_chat);
+					TextChannel stream_chat = g.getTextChannelById(Constants.stream_chat);
+					
+					purgeOverridesForVoiceChannel(voice_chat);
+					purgeOverridesForVoiceChannel(stream_chat);
+				}
+			}
+		}
+	};
+	
+	public static void setup(JDA jda) {
+		VoiceEvent.jda = jda;
+		
+		permCleanup.start();
+	}
+	
 	private TextChannel getVoiceLog(GenericGuildEvent event) {
 		Guild guild = event.getGuild();
 		TextChannel ret = guild.getTextChannelById(Constants.voice_log);
@@ -46,26 +97,6 @@ public class VoiceEvent extends ListenerAdapter {
 		
 		if (correspondingChatChannel != null) {			
 			correspondingChatChannel.createPermissionOverride(event.getMember()).grant(Permission.MESSAGE_READ).queue();
-			
-//			correspondingChatChannel.getMemberPermissionOverrides().forEach(override -> {
-//				Member allowee = override.getMember();
-//				GuildVoiceState state = allowee.getVoiceState();
-//				VoiceChannel channel = state.getChannel();
-//				
-//				boolean deleteOverride = false;
-//				
-//				if (channel != null) {
-//					if (!(channel.getId().equalsIgnoreCase(voiceChannelID))) {
-//						deleteOverride = true;
-//					}
-//				} else {
-//					deleteOverride = true;
-//				}
-//				
-//				if (deleteOverride) {
-//					override.delete().queue();
-//				}
-//			});
 		}
 	}
 
@@ -132,7 +163,7 @@ public class VoiceEvent extends ListenerAdapter {
 			}
 		}
 		
-		if (correspondingChatChannel != null) {			
+		if (correspondingChatChannel != null) {
 			correspondingChatChannel.getPermissionOverride(event.getMember()).delete().queue();
 		}
 	}

@@ -117,7 +117,7 @@ public class MuteAction extends InfractionAction {
         
 		DBObject log = ModerationLogDB.generateLog(getTargetUserID(), "Muted", getAdminID(), reason, getImages(), getMessageID(), length);
 		DBCollection logs = DBManager.getInstance().addDocument(Constants.ModLogs, getTargetUserID(), log);
-		length = (long)log.get("length");
+		length = (long)Integer.toUnsignedLong((int)log.get("length"));
 		EmbedBuilder result = new EmbedBuilder();
 		result.setTitle(String.format("<%s> has been muted.", getTargetUserName()));
 		result.setDescription(log.get("reason").toString());
