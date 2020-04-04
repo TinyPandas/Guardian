@@ -22,6 +22,7 @@ public class Constants {
 
 	public static final String suggestionbox = "688511694577991714";
 	public static final String showcase = "689686353021370376";
+	public static final String showcaseattempts = "696110795339333752";
 	public static final String event = "689686663705788422";
 	public static final String voice_chat = "270004237595836418";
 	public static final String voice_voice = "235169244919234560";

@@ -28,8 +28,7 @@ public class ReactionEvent extends ListenerAdapter {
 				}
 			}
 			
-			
-			if (isStaff) return;
+			if (!isStaff) return;
 			
 			ModAction action = null;
 			

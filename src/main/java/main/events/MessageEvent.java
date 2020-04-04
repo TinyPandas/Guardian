@@ -19,6 +19,7 @@ import main.lib.Constants;
 import main.lib.MessageObject;
 import main.lib.Utils;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.TextChannel;
@@ -35,6 +36,7 @@ public class MessageEvent extends ListenerAdapter {
 	@Override
 	public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
 		super.onGuildMessageReceived(event);
+		Guild guild = event.getGuild();
 		Member member = event.getMember();
 		TextChannel channel = event.getChannel();
 		
@@ -88,7 +90,7 @@ public class MessageEvent extends ListenerAdapter {
 			
 			String raw = m.getContentRaw();
 			//Contains link to some roblox entity.
-			if (raw.contains("roblox.com")) {
+			if (raw.contains("roblox.com") || raw.contains("gyazo.com")) {
 				validPost = true;
 			}
 			
@@ -100,6 +102,13 @@ public class MessageEvent extends ListenerAdapter {
 				member.getUser().openPrivateChannel().queue(c -> {
 					c.sendMessage("The use of the showcase channel is to display your creations for the community to see. We have deemed your post did not meet this expectation. If you feel this is an error, please contact a member of staff.").queue();
 				});
+				
+				EmbedBuilder e = new EmbedBuilder();
+				e.setTitle("Showcase post attempt");
+				e.setDescription("Author: " + member.getEffectiveName());
+				e.addField("Content", m.getContentDisplay(), true);
+				
+				guild.getTextChannelById(Constants.showcaseattempts).sendMessage(e.build()).queue();
 				
 				m.delete().queue();
 			}
