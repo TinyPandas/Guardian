@@ -91,6 +91,13 @@ public class MessageEvent extends ListenerAdapter {
 				
 				m.delete().queue();
 			}
+		} else if(channel.getId().equalsIgnoreCase(Constants.suggestionbox)) {
+			String raw = m.getContentRaw();
+			
+			if (raw.startsWith("--sug--")) {
+				m.addReaction(event.getGuild().getEmotesByName("upvote", true).get(0)).queue();
+				m.addReaction(event.getGuild().getEmotesByName("downvote", true).get(0)).queue();
+			}
 		} else {
 			if (!(track.containsKey(member.getId()))) {
 				track.put(member.getId(), new ArrayList<MessageObject>());

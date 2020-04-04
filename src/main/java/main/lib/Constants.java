@@ -18,7 +18,8 @@ public class Constants {
 	public static final String mute_log = "405214780656320512";
 	public static final String join_log = "405214726650331139";
 	public static final String commands = "410429900827262976";
-	
+
+	public static final String suggestionbox = "688511694577991714";
 	public static final String showcase = "689686353021370376";
 	public static final String event = "689686663705788422";
 	public static final String voice_chat = "270004237595836418";
@@ -39,4 +40,5 @@ public class Constants {
 	public static final String ChatLogs = "ChatLogs";
 	public static final String ChatEditLogs = "EditedLogs";
 	public static final String ChatDelLogs = "DeletedLogs";
+
 }

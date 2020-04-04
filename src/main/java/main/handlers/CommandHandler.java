@@ -44,7 +44,7 @@ public class CommandHandler extends CommandClientBuilder {
 			} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
 					| InvocationTargetException | NoSuchMethodException | SecurityException
 					| ClassNotFoundException e) {
-				e.printStackTrace();
+				//e.printStackTrace();
 			}
 		}
 
@@ -59,7 +59,7 @@ public class CommandHandler extends CommandClientBuilder {
 			} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
 					| InvocationTargetException | NoSuchMethodException | SecurityException
 					| ClassNotFoundException e) {
-				e.printStackTrace();
+				//e.printStackTrace();
 			}
 		}
 	}
