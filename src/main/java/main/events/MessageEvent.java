@@ -42,6 +42,10 @@ public class MessageEvent extends ListenerAdapter {
 			return;
 		}
 		
+		if (member == null || member.getUser() == null) {
+			return;
+		}
+		
 		if (member.getUser().isBot() || member.getUser().isFake()) {
 			return;
 		}
@@ -283,7 +287,7 @@ public class MessageEvent extends ListenerAdapter {
 		builder.setColor(Color.RED);
 		builder.addField("User", event.getGuild().getMemberById(obj.get("authorID").toString()).getEffectiveName(), true);
 		builder.addField("Channel", event.getChannel().getAsMention(), true);
-		builder.addField("Content", oldContent.substring(0, 2000), false);
+		builder.addField("Content", oldContent.substring(0, (oldContent.length() > 2000 ? 2000 : oldContent.length())), false);
 		
 		TextChannel log = event.getGuild().getTextChannelById(Constants.chat_log);
 		if (log == null) {

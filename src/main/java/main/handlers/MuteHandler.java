@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.util.HashMap;
 
 import main.Start;
-import main.lib.Constants;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 
@@ -38,30 +37,36 @@ public class MuteHandler extends Thread {
 		if (isMuted(userID) || hasRole) {
 			isMuted.remove(userID);
 			
-			Guild guild = Start.getAPI().getGuildById(userGuild.get(userID));
-			guild.removeRoleFromMember(userID, guild.getRolesByName("muted", true).get(0)).queue();
+			String guildID = userGuild.get(userID);
 			
-			guild.getTextChannelsByName("mute-log", true).get(0).sendMessage(guild.getMemberById(userID).getAsMention() + " has been unmuted.").queue();
-			
-			try {
-				guild.mute(guild.getMemberById(userID), false).queue();
-			} catch (Exception e) {
-				//May not be in voice channel.
-			}
-			
-			Start.getAPI().getUserById(userID).openPrivateChannel().queue(pc -> {
-				if (early) {
-					EmbedBuilder unmuteEarly = new EmbedBuilder();
-					unmuteEarly.setTitle("You've been unmuted early by a moderator.");
-					unmuteEarly.setDescription("Welcome back.");
-					unmuteEarly.setColor(Color.GREEN);
-					pc.sendMessage(unmuteEarly.build()).queue();
-				} else {
-					pc.sendMessage("You have been unmuted.").queue();
+			if (guildID != null) {
+				Guild guild = Start.getAPI().getGuildById(guildID);
+				guild.removeRoleFromMember(userID, guild.getRolesByName("muted", true).get(0)).queue();
+				
+				guild.getTextChannelsByName("mute-log", true).get(0).sendMessage(guild.getMemberById(userID).getAsMention() + " has been unmuted.").queue();
+				
+				try {
+					guild.mute(guild.getMemberById(userID), false).queue();
+				} catch (Exception e) {
+					//May not be in voice channel.
 				}
-			});
+				
+				Start.getAPI().getUserById(userID).openPrivateChannel().queue(pc -> {
+					if (early) {
+						EmbedBuilder unmuteEarly = new EmbedBuilder();
+						unmuteEarly.setTitle("You've been unmuted early by a moderator.");
+						unmuteEarly.setDescription("Welcome back.");
+						unmuteEarly.setColor(Color.GREEN);
+						pc.sendMessage(unmuteEarly.build()).queue();
+					} else {
+						pc.sendMessage("You have been unmuted.").queue();
+					}
+				});
+				
+				return true;
+			} 
 			
-			return true;
+			return false;
 		}
 		return false;
 	}
