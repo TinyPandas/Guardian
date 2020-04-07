@@ -3,7 +3,6 @@ package main.events;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 
 import com.mongodb.BasicDBObject;
@@ -11,10 +10,7 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 
-import main.actions.infractions.MuteAction;
-import main.actions.lib.ModAction;
 import main.database.DBManager;
-import main.handlers.MuteHandler;
 import main.lib.Constants;
 import main.lib.MessageObject;
 import main.lib.Utils;
@@ -32,6 +28,16 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 public class MessageEvent extends ListenerAdapter {
 	HashMap<String, List<MessageObject>> track = new HashMap<>();
 	HashMap<String, List<String>> msgHist = new HashMap<>();
+	
+	static List<String> allowedLinks = new ArrayList<>();
+	
+	static {
+		allowedLinks.add("roblox.com");
+		allowedLinks.add("gyazo.com");
+		allowedLinks.add("cdn.discordapp.com/attachments/");
+		allowedLinks.add("twitter.com");
+		allowedLinks.add("streamable.com");
+	}
 	
 	@Override
 	public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
@@ -80,7 +86,7 @@ public class MessageEvent extends ListenerAdapter {
 		
 		manager.addDocument(Constants.MainDB, Constants.ChatLogs, messageLog);
 		
-		if (channel.getId().equalsIgnoreCase(Constants.showcase)) {
+		if (channel.getName().equalsIgnoreCase("showcase")) {
 			boolean validPost = false;
 			
 			//Has some form of image(s).
@@ -90,8 +96,10 @@ public class MessageEvent extends ListenerAdapter {
 			
 			String raw = m.getContentRaw();
 			//Contains link to some roblox entity.
-			if (raw.contains("roblox.com") || raw.contains("gyazo.com")) {
-				validPost = true;
+			for (String link:allowedLinks) {
+				if (raw.contains(link)) {
+					validPost = true;
+				}
 			}
 			
 			if (Utils.hasRoleWithName(member, "staff")) {
@@ -112,7 +120,7 @@ public class MessageEvent extends ListenerAdapter {
 				
 				m.delete().queue();
 			}
-		} else if(channel.getId().equalsIgnoreCase(Constants.suggestionbox)) {
+		} else if(channel.getName().equalsIgnoreCase("suggestion-box")) {
 			String raw = m.getContentRaw();
 			
 			if (raw.startsWith("--sug--")) {
@@ -120,75 +128,76 @@ public class MessageEvent extends ListenerAdapter {
 				m.addReaction(event.getGuild().getEmotesByName("downvote", true).get(0)).queue();
 			}
 		} else {
-			if (!(track.containsKey(member.getId()))) {
-				track.put(member.getId(), new ArrayList<MessageObject>());
-			}
-			
-			//Sending Messages too quickly
-			if (!(MuteHandler.isMuted(member.getId()))) {
-				MessageObject msg = new MessageObject(member.getId(), System.currentTimeMillis());
-				List<MessageObject> hist = track.get(member.getId());
-				hist.add(msg);
-				
-				for (Iterator<MessageObject> it = hist.iterator();it.hasNext();) {
-					MessageObject obj = it.next();
-					if (obj.isDeleted()) {
-						it.remove();
-					}
-				}
-				
-				if (hist.size() >= 5) {
-					ModAction mute = new MuteAction(member.getId(), member.getEffectiveName(), admin.getId(), admin2.getEffectiveName(), "You are sending messages too quickly.", new ArrayList<>(), null);
-					((MuteAction)mute).deleteContext(event.getChannel(), event.getMessageId(), hist.size(), true);
-					//mute.execute(event.getGuild(), event.getChannel());
-				}
-				
-				track.replace(member.getId(), hist);
-			}
-			
-			//Sending repeating messages
-			if (!(msgHist.containsKey(member.getId()))) {
-				msgHist.put(member.getId(), new ArrayList<>());
-			}
-			
-			if (!(MuteHandler.isMuted(member.getId()))) {
-				List<String> pastMessages = msgHist.get(member.getId());
-				String currentMessage = event.getMessage().getContentStripped();
-				
-				int consecutiveMatches = 0;
-				String lastMatch = "";
-				
-				if (pastMessages.size() > 0) { 
-					for (int i=pastMessages.size();i>0;i--) {
-						String indexMessage = pastMessages.get(i-1);
-						
-						if (indexMessage.length() > 0) { //Only act if message has content.
-							if (lastMatch.equalsIgnoreCase("") || !(lastMatch.equalsIgnoreCase(indexMessage))) {
-								lastMatch = indexMessage;
-								consecutiveMatches = 0;
-							} else if(lastMatch.equalsIgnoreCase(indexMessage)) {
-								consecutiveMatches += 1;
-							}
-						}
-					}
-				}
-				
-				pastMessages.add(currentMessage);
-				
-				if (pastMessages.size() > 10) {
-					pastMessages.remove(0); //First in first out
-				}
-				
-				if (consecutiveMatches >= 3) {
-					ModAction mute = new MuteAction(member.getId(), member.getEffectiveName(), admin.getId(), admin2.getEffectiveName(), "Sending the same message repeatedly. \n " + currentMessage + " (x" + consecutiveMatches + ")", new ArrayList<>(), null);
-					((MuteAction)mute).deleteContext(event.getChannel(), event.getMessageId(), consecutiveMatches, false);
-					//mute.execute(event.getGuild(), event.getChannel());
-					
-					pastMessages = new ArrayList<>();
-				}
-				
-				msgHist.replace(member.getId(), pastMessages);
-			}
+			//TODO Fix autofilters.
+//			if (!(track.containsKey(member.getId()))) {
+//				track.put(member.getId(), new ArrayList<MessageObject>());
+//			}
+//			
+//			//Sending Messages too quickly
+//			if (!(MuteHandler.isMuted(member.getId()))) {
+//				MessageObject msg = new MessageObject(member.getId(), System.currentTimeMillis());
+//				List<MessageObject> hist = track.get(member.getId());
+//				hist.add(msg);
+//				
+//				for (Iterator<MessageObject> it = hist.iterator();it.hasNext();) {
+//					MessageObject obj = it.next();
+//					if (obj.isDeleted()) {
+//						it.remove();
+//					}
+//				}
+//				
+//				if (hist.size() >= 5) {
+//					ModAction mute = new MuteAction(member.getId(), member.getEffectiveName(), admin.getId(), admin2.getEffectiveName(), "You are sending messages too quickly.", new ArrayList<>(), null);
+//					((MuteAction)mute).deleteContext(event.getChannel(), event.getMessageId(), hist.size(), true);
+//					//mute.execute(event.getGuild(), event.getChannel());
+//				}
+//				
+//				track.replace(member.getId(), hist);
+//			}
+//			
+//			//Sending repeating messages
+//			if (!(msgHist.containsKey(member.getId()))) {
+//				msgHist.put(member.getId(), new ArrayList<>());
+//			}
+//			
+//			if (!(MuteHandler.isMuted(member.getId()))) {
+//				List<String> pastMessages = msgHist.get(member.getId());
+//				String currentMessage = event.getMessage().getContentStripped();
+//				
+//				int consecutiveMatches = 0;
+//				String lastMatch = "";
+//				
+//				if (pastMessages.size() > 0) { 
+//					for (int i=pastMessages.size();i>0;i--) {
+//						String indexMessage = pastMessages.get(i-1);
+//						
+//						if (indexMessage.length() > 0) { //Only act if message has content.
+//							if (lastMatch.equalsIgnoreCase("") || !(lastMatch.equalsIgnoreCase(indexMessage))) {
+//								lastMatch = indexMessage;
+//								consecutiveMatches = 0;
+//							} else if(lastMatch.equalsIgnoreCase(indexMessage)) {
+//								consecutiveMatches += 1;
+//							}
+//						}
+//					}
+//				}
+//				
+//				pastMessages.add(currentMessage);
+//				
+//				if (pastMessages.size() > 10) {
+//					pastMessages.remove(0); //First in first out
+//				}
+//				
+//				if (consecutiveMatches >= 3) {
+//					ModAction mute = new MuteAction(member.getId(), member.getEffectiveName(), admin.getId(), admin2.getEffectiveName(), "Sending the same message repeatedly. \n " + currentMessage + " (x" + consecutiveMatches + ")", new ArrayList<>(), null);
+//					((MuteAction)mute).deleteContext(event.getChannel(), event.getMessageId(), consecutiveMatches, false);
+//					//mute.execute(event.getGuild(), event.getChannel());
+//					
+//					pastMessages = new ArrayList<>();
+//				}
+//				
+//				msgHist.replace(member.getId(), pastMessages);
+//			}
 		}
 			
 		//Message filtered words.
@@ -221,6 +230,7 @@ public class MessageEvent extends ListenerAdapter {
 	@Override
 	public void onGuildMessageUpdate(GuildMessageUpdateEvent event) {
 		super.onGuildMessageUpdate(event);
+		Guild guild = event.getGuild();
 		Member member = event.getMember();
 		
 		if (member.getUser().isBot() || member.getUser().isFake()) {
@@ -253,10 +263,8 @@ public class MessageEvent extends ListenerAdapter {
 		builder.addField("Before", oldContent, false);
 		builder.addField("After", event.getMessage().getContentDisplay(), false);
 		
-		TextChannel log = event.getGuild().getTextChannelById(Constants.chat_log);
-		if (log == null) {
-			log = event.getGuild().getTextChannelsByName("chat-log", true).get(0);
-		}
+		TextChannel log = Utils.getOrCreateChannel(guild, "chat-log");
+		
 		log.sendMessage(builder.build()).queue();
 		
 		DBObject dbLog = new BasicDBObject()
@@ -272,6 +280,8 @@ public class MessageEvent extends ListenerAdapter {
 	@Override
 	public void onGuildMessageDelete(GuildMessageDeleteEvent event) {
 		super.onGuildMessageDelete(event);	
+		
+		Guild guild = event.getGuild();
 		
 		DBManager manager = DBManager.getInstance();
 		DBCollection col = manager.getCollection(Constants.MainDB, Constants.ChatLogs);
@@ -298,10 +308,7 @@ public class MessageEvent extends ListenerAdapter {
 		builder.addField("Channel", event.getChannel().getAsMention(), true);
 		builder.addField("Content", oldContent.substring(0, (oldContent.length() > 2000 ? 2000 : oldContent.length())), false);
 		
-		TextChannel log = event.getGuild().getTextChannelById(Constants.chat_log);
-		if (log == null) {
-			log = event.getGuild().getTextChannelsByName("chat-log", true).get(0);
-		}
+		TextChannel log = Utils.getOrCreateChannel(guild, "chat-log");
 		log.sendMessage(builder.build()).queue();
 		
 		DBObject dbLog = new BasicDBObject()
