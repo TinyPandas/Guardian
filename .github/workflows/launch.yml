@@ -20,10 +20,10 @@ env:
   GKE_EMAIL: ${{ secrets.GKE_EMAIL }}
   GITHUB_SHA: ${{ github.sha }}
   GKE_ZONE: us-central1-c
-  GKE_CLUSTER: guardian-cluser
-  IMAGE: gke-test
+  GKE_CLUSTER: guardian-cluster
+  IMAGE: openjdk:15-oraclelinux7
   REGISTRY_HOSTNAME: gcr.io
-  DEPLOYMENT_NAME: openjdk:15-oraclelinux7
+  DEPLOYMENT_NAME: gke-test
 
 jobs:
   setup-build-publish-deploy:
