@@ -14,7 +14,6 @@ on:
   push:
     branches:
     - master
-    - release/*
 
 # Environment variables available to all jobs and steps in this workflow
 env:
@@ -24,8 +23,6 @@ env:
   GKE_ZONE: us-central1-c
   GKE_CLUSTER: guardian-cluster
   IMAGE: openjdk:15-oraclelinux7
-  REGISTRY_HOSTNAME: gcr.io
-  DEPLOYMENT_NAME: gke-test
 
 jobs:
   setup-build-publish-deploy:
